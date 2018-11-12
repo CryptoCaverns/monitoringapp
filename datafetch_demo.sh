@@ -29,8 +29,7 @@ COUNTER=1
                    --arg bver "$BIOS_VERSION" \
                    --arg bven "$BIOS_VENDOR" \
                    '{GPU: {SysLabel: $gn, PCIESlotId: $gp, MacAddress, HasRiser: false}, MotherBoard: {SysLabel: $mn, SerialNumber: $ms}, TunningSettings: {CPUClockSpeed, MemoryClockSpeed, CPUVoltage, VRAMVoltage}, BIOSSettings: { BiosVersion: $bver, BiosVendor: $bven, MemoryStrapping, }}' )
-     #echo $JSON_STRING | jq .
-      echo $JSON_STRING | jq . > ./$OUTPUTDIR/$GPU_NUMBER
-      aws s3 cp ./$OUTPUTDIR/$GPU_NUMBER s3://monitoringapp-dev/rigs/rig1/
+      echo $JSON_STRING | jq . > ./$OUTPUTDIR/${GPU_NUMBER}.json
+      aws s3 cp ./$OUTPUTDIR/${GPU_NUMBER}.json s3://monitoringapp-dev/rigs/rig1/
      let COUNTER+=1
  done <<< "$GPU_INFO"
