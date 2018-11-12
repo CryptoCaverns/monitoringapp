@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.S3Events;
 using Amazon.S3;
+using MongoDB.Bson;
+using Monitoring.Infrastructure.MongoDB;
 using Monitoring.Infrastructure.MongoDB.Documents;
 using Newtonsoft.Json;
 
@@ -34,7 +36,7 @@ namespace Monitoring.AWS.Lambda.MonitoringJob
         {
             S3Client = s3Client;
         }
-        
+
         /// <summary>
         /// This method is called for every Lambda invocation. This method takes in an S3 event object and can be used 
         /// to respond to S3 notifications.
@@ -52,6 +54,8 @@ namespace Monitoring.AWS.Lambda.MonitoringJob
 
             try
             {
+
+                var mongo = new MongoRepository();
                 context.Logger.LogLine($"Read file from Bucket: {s3Event.Bucket.Name}");
                 context.Logger.LogLine($"Read file with Key: {s3Event.Object.Key}");
 
@@ -59,12 +63,17 @@ namespace Monitoring.AWS.Lambda.MonitoringJob
                 using (var sr = new StreamReader(response.ResponseStream))
                 {
                     var content = sr.ReadToEnd();
+                    MinerUnitDocument model;
                     try
                     {
-                        var model = JsonConvert.DeserializeObject<MinerUnitDocument>(content);
+                        model = JsonConvert.DeserializeObject<MinerUnitDocument>(content);
 
-                        context.Logger.LogLine($"Read file with Motherboard Serial Number: {model?.MotherBoard?.SerialNumber}");
-                        return model?.MotherBoard?.SerialNumber;
+                        if (model == null)
+                        {
+                            throw new Exception();
+                        }
+
+                        context.Logger.LogLine($"Read file with GPU SysLabel: {model.GPU?.SysLabel}");
                     }
                     catch
                     {
@@ -72,6 +81,11 @@ namespace Monitoring.AWS.Lambda.MonitoringJob
 
                         return string.Empty;
                     }
+
+                    model.Id = ObjectId.GenerateNewId(DateTime.Now);
+                    mongo.GetMinerUnits().InsertOne(model);
+
+                    return model.GPU?.SysLabel;
                 }
             }
             catch (Exception e)

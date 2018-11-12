@@ -2,10 +2,8 @@
 
 namespace Monitoring.Infrastructure.MongoDB.Documents
 {
-    public class MinerUnitDocument
+    public class MinerUnitDocument : MongoEntity
     {
-        public string Id { get; set; }
-
         public GPU GPU { get; set; }
 
         public Motherboard MotherBoard { get; set; }

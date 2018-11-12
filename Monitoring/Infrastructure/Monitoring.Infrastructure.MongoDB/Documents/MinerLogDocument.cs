@@ -2,10 +2,8 @@
 
 namespace Monitoring.Infrastructure.MongoDB.Documents
 {
-    public class MinerLogDocument
+    public class MinerLogDocument : MongoEntity
     {
-        public string Id { get; set; }
-
         public string MiningUnitId { get; set; }
 
         public int HashRate { get; set; }

@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monitoring.AWS.Lambda.Monit
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{816571D7-E0A2-4EFF-A63F-135EC169D480}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monitoring.Infrastructure.MongoDB", "Infrastructure\Monitoring.Infrastructure.MongoDB\Monitoring.Infrastructure.MongoDB.csproj", "{57DB3118-0518-43DD-A24A-2CB63E84AA0C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monitoring.Infrastructure.MongoDB", "Infrastructure\Monitoring.Infrastructure.MongoDB\Monitoring.Infrastructure.MongoDB.csproj", "{57DB3118-0518-43DD-A24A-2CB63E84AA0C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
