@@ -13,8 +13,9 @@
     "function-runtime" : "dotnetcore2.1",
     "function-memory-size" : 512,
     "function-timeout"     : 15,
-    "function-handler"     : "Monitoring.AWS.Lambda.MonitoringJob::Monitoring.AWS.Lambda.MonitoringJob.Function::FunctionHandler",
-    "function-name"        : "MonitoringJob-Dev",
+    "function-handler"     : "Monitoring.AWS.Lambda.MonitoringJobStats::Monitoring.AWS.Lambda.MonitoringJobStats.Function::FunctionHandler",
+    "function-name"        : "MonitoringJob-Stats-Dev",
+    "function-description" : "",
     "function-role"        : "arn:aws:iam::311409742520:role/service-role/S3ReadLambdaRole",
     "tracing-mode"         : "PassThrough",
     "environment-variables" : ""

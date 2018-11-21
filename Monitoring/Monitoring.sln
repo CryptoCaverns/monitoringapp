@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monitoring.Infrastructure.MongoDB", "Infrastructure\Monitoring.Infrastructure.MongoDB\Monitoring.Infrastructure.MongoDB.csproj", "{57DB3118-0518-43DD-A24A-2CB63E84AA0C}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monitoring.AWS.Lambda.MonitoringJobStats", "AWS.Lambda\Monitoring.AWS.Lambda.MonitoringJobStats\Monitoring.AWS.Lambda.MonitoringJobStats.csproj", "{6A19DCF5-5D6E-40AF-A865-353BDFE0D677}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{57DB3118-0518-43DD-A24A-2CB63E84AA0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57DB3118-0518-43DD-A24A-2CB63E84AA0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57DB3118-0518-43DD-A24A-2CB63E84AA0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A19DCF5-5D6E-40AF-A865-353BDFE0D677}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A19DCF5-5D6E-40AF-A865-353BDFE0D677}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A19DCF5-5D6E-40AF-A865-353BDFE0D677}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A19DCF5-5D6E-40AF-A865-353BDFE0D677}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -32,6 +38,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{05C5B493-1773-4EC7-B42E-A9BADAA44B66} = {80103B4D-BC3D-4F04-9A5A-EA681F4E9214}
 		{57DB3118-0518-43DD-A24A-2CB63E84AA0C} = {816571D7-E0A2-4EFF-A63F-135EC169D480}
+		{6A19DCF5-5D6E-40AF-A865-353BDFE0D677} = {80103B4D-BC3D-4F04-9A5A-EA681F4E9214}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1029E84A-458F-4E69-885E-57F004315194}
