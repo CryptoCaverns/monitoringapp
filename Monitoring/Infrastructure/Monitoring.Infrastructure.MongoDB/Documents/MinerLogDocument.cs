@@ -6,6 +6,8 @@ namespace Monitoring.Infrastructure.MongoDB.Documents
     {
         public string MiningUnitId { get; set; }
 
+        public string SysLabel { get; set; }
+
         public int HashRate { get; set; }
 
         public double AvgTemp { get; set; }

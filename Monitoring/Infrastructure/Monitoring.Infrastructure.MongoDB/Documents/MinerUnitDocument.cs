@@ -21,9 +21,7 @@ namespace Monitoring.Infrastructure.MongoDB.Documents
     {
         public string SysLabel { get; set; }
 
-        public string PCIESlotId { get; set; }
-
-        public string MacAddress { get; set; }
+        public string Name { get; set; }
 
         public bool HasRiser { get; set; }
     }
@@ -34,7 +32,7 @@ namespace Monitoring.Infrastructure.MongoDB.Documents
 
         public string MacAddress { get; set; }
 
-        public string SerialNumber { get; set; }
+        public string IPAddress { get; set; }
     }
 
     public class BIOS
