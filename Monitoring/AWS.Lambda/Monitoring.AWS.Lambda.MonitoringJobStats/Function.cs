@@ -60,25 +60,22 @@ namespace Monitoring.AWS.Lambda.MonitoringJobStats
                 var mongo = new MongoRepository();
                 context.Logger.LogLine($"Read file from Bucket: {s3Event.Bucket.Name}");
                 context.Logger.LogLine($"Read file with Key: {s3Event.Object.Key}");
-                var sysLabel = s3Event.Object.Key.Split('/').Last().Replace(".json", "");
 
                 var response = await S3Client.GetObjectAsync(s3Event.Bucket.Name, s3Event.Object.Key);
                 using (var sr = new StreamReader(response.ResponseStream))
                 {
                     var content = sr.ReadToEnd();
-                    MinerLogDocument model;
+                    LogDto model;
                     try
                     {
-                        model = JsonConvert.DeserializeObject<MinerLogDocument>(content);
+                        model = JsonConvert.DeserializeObject<LogDto>(content);
 
                         if (model == null)
                         {
                             throw new Exception();
                         }
-
-                        model.SysLabel = sysLabel;
-
-                        context.Logger.LogLine($"Read file with stats for GPU-SysLabel: {model.SysLabel}");
+                        
+                        context.Logger.LogLine($"Read file with stats for GPU-SysLabel: {model.GPU.SysLabel}");
                     }
                     catch
                     {
@@ -87,10 +84,10 @@ namespace Monitoring.AWS.Lambda.MonitoringJobStats
                         return string.Empty;
                     }
 
-                    model.Id = ObjectId.GenerateNewId(DateTime.Now);
-                    mongo.GetMinerLogs().InsertOne(model);
+                    model.GPU.Id = ObjectId.GenerateNewId(DateTime.Now);
+                    mongo.GetMinerLogs().InsertOne(model.GPU);
 
-                    return model.SysLabel;
+                    return model.GPU.SysLabel;
                 }
             }
             catch (Exception e)
