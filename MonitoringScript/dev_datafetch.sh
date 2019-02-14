@@ -27,7 +27,7 @@ COUNTER=0
      GPU_PCI=$(echo $line | awk -F: '{print$2}')
      GPU_TYPE=$(echo $line | awk -F: '{print$3}')
      GPU_MEMORY_TYPE=$(echo $line | awk -F: '{print$5}')
-     PRODUCT_NAME=$(sudo atiflash -ai $COUNTER | grep Product | awk -F: '{print$2}')
+     PRODUCT_NAME=$(sudo atiflash -ai $COUNTER | grep Product | awk '{print$4}')
      CHECKSUM=$(sudo atiflash -cb $COUNTER | awk '{print $4}')
      let COUNTER+=1
      JSON_STRING=$( jq -n \
@@ -44,9 +44,9 @@ COUNTER=0
                    --arg rv "$RAM_VOLTAGE" \
                    --arg bver "$BIOS_VERSION" \
                    --arg bven "$BIOS_VENDOR" \
-                   '{GPU: {SysLabel: $gn, ProductName: $pn, PCIESlotId: $gp, MacAddress, HasRiser: false}, MotherBoard: {SysLabel: $mn, SerialNumber: $ms}, TunningSettings: {CPUClockSpeed: $ccp, MemoryClockSpeed: $rcs, CPUVoltage: $cv, VRAMVoltage: $rv, TimeStamp: $ts}, BIOSSettings: { BiosVersion: $bver, BiosVendor: $bven, BiosHash: $cc, MemoryStrapping, }}' )
-      echo $JSON_STRING | jq . > ./$OUTPUTDIR/${GPU_NUMBER}.json
-      aws s3 cp ./$OUTPUTDIR/${GPU_NUMBER}.json s3://monitoringapp-dev/rigs/4fe55d/
+                   '{GPU: {SysLabel: $pn, PCIESlotId: $gp, MacAddress, HasRiser: false}, MotherBoard: {SysLabel: $mn, SerialNumber: $ms}, TunningSettings: {CPUClockSpeed: $ccp, MemoryClockSpeed: $rcs, CPUVoltage: $cv, VRAMVoltage: $rv, TimeStamp: $ts}, BIOSSettings: { BiosVersion: $bver, BiosVendor: $bven, BiosHash: $cc, MemoryStrapping, }}' )
+      echo $JSON_STRING | jq . > ./$OUTPUTDIR/${PRODUCT_NAME}.json
+      aws s3 cp ./$OUTPUTDIR/${PRODUCT_NAME}.json s3://monitoringapp-dev/rigs/4fe55d/
  done <<< "$GPU_INFO"
 
 #MOTHERBOARD_MANUFACTURER=$(/usr/sbin/dmidecode -t 2 | grep -Poi "(?<=Manufacturer\:\s)(.*)")
