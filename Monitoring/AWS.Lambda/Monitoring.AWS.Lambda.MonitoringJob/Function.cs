@@ -83,6 +83,7 @@ namespace Monitoring.AWS.Lambda.MonitoringJob
                     }
 
                     model.Id = ObjectId.GenerateNewId(DateTime.Now);
+                    model.CreatedTimestamp = DateTime.UtcNow;
                     mongo.GetMinerUnits().InsertOne(model);
 
                     return model.GPU?.SysLabel;

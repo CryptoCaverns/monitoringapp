@@ -160,6 +160,7 @@ namespace Monitoring.Routines.ReprocessData
                             }
 
                             model.Id = ObjectId.GenerateNewId(DateTime.Now);
+                            model.CreatedTimestamp = DateTime.UtcNow;
                             _mongoRepository.GetMinerUnits().InsertOne(model);
                         }
                         last = entry.Key;
