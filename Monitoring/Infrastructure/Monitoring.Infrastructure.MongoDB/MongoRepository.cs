@@ -7,6 +7,7 @@ namespace Monitoring.Infrastructure.MongoDB
     public class MongoRepository
     {
         private readonly IMongoClient _client;
+        private string _mongoDbName;
 
         public MongoRepository()
         {
@@ -33,10 +34,22 @@ namespace Monitoring.Infrastructure.MongoDB
             var credential = MongoCredential.CreateCredential(Environment.GetEnvironmentVariable("mongoDBName"),
                 Environment.GetEnvironmentVariable("mongoUser"), Environment.GetEnvironmentVariable("mongoPassword"));
 
+            _mongoDbName = Environment.GetEnvironmentVariable("mongoDBName");
             var settings = new MongoClientSettings
             {
                 Credential = credential,
                 Server = new MongoServerAddress(Environment.GetEnvironmentVariable("mongoUrl"))
+            };
+            _client = new MongoClient(settings);
+        }
+
+        public MongoRepository(MongoCredential credential, string url, string dbName)
+        {
+            _mongoDbName = dbName;
+            var settings = new MongoClientSettings
+            {
+                Credential = credential,
+                Server = new MongoServerAddress(url)
             };
             _client = new MongoClient(settings);
         }
@@ -55,7 +68,7 @@ namespace Monitoring.Infrastructure.MongoDB
         {
             try
             {
-                return _client.GetDatabase(Environment.GetEnvironmentVariable("mongoDBName"));
+                return _client.GetDatabase(_mongoDbName);
             }
             catch (Exception e)
             {

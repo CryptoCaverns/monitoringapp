@@ -1,6 +1,6 @@
 ﻿using Monitoring.Infrastructure.MongoDB.Documents;
 
-namespace Monitoring.AWS.Lambda.MonitoringJobStats
+namespace Monitoring.Dto
 {
     public class LogDto
     {

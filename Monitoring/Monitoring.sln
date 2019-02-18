@@ -13,6 +13,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monitoring.Infrastructure.M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monitoring.AWS.Lambda.MonitoringJobStats", "AWS.Lambda\Monitoring.AWS.Lambda.MonitoringJobStats\Monitoring.AWS.Lambda.MonitoringJobStats.csproj", "{6A19DCF5-5D6E-40AF-A865-353BDFE0D677}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Routines", "Routines", "{64EC6CE5-84A3-44D0-AB30-953AC6604A30}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monitoring.Routines.ReprocessData", "Routines\Monitoring.Routines.ReprocessData\Monitoring.Routines.ReprocessData.csproj", "{E9308CD2-7661-4468-AEE4-89FCFFCE79BD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monitoring.Dto", "Monitoring.Dto\Monitoring.Dto.csproj", "{57425FAF-D4EC-4D66-B2EB-6F4CC4F4E305}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +37,14 @@ Global
 		{6A19DCF5-5D6E-40AF-A865-353BDFE0D677}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A19DCF5-5D6E-40AF-A865-353BDFE0D677}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A19DCF5-5D6E-40AF-A865-353BDFE0D677}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9308CD2-7661-4468-AEE4-89FCFFCE79BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9308CD2-7661-4468-AEE4-89FCFFCE79BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9308CD2-7661-4468-AEE4-89FCFFCE79BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9308CD2-7661-4468-AEE4-89FCFFCE79BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57425FAF-D4EC-4D66-B2EB-6F4CC4F4E305}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57425FAF-D4EC-4D66-B2EB-6F4CC4F4E305}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57425FAF-D4EC-4D66-B2EB-6F4CC4F4E305}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57425FAF-D4EC-4D66-B2EB-6F4CC4F4E305}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -39,6 +53,8 @@ Global
 		{05C5B493-1773-4EC7-B42E-A9BADAA44B66} = {80103B4D-BC3D-4F04-9A5A-EA681F4E9214}
 		{57DB3118-0518-43DD-A24A-2CB63E84AA0C} = {816571D7-E0A2-4EFF-A63F-135EC169D480}
 		{6A19DCF5-5D6E-40AF-A865-353BDFE0D677} = {80103B4D-BC3D-4F04-9A5A-EA681F4E9214}
+		{E9308CD2-7661-4468-AEE4-89FCFFCE79BD} = {64EC6CE5-84A3-44D0-AB30-953AC6604A30}
+		{57425FAF-D4EC-4D66-B2EB-6F4CC4F4E305} = {816571D7-E0A2-4EFF-A63F-135EC169D480}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1029E84A-458F-4E69-885E-57F004315194}

@@ -7,6 +7,7 @@ using Amazon.Lambda.Core;
 using Amazon.Lambda.S3Events;
 using Amazon.S3;
 using MongoDB.Bson;
+using Monitoring.Dto;
 using Monitoring.Infrastructure.MongoDB;
 using Monitoring.Infrastructure.MongoDB.Documents;
 using Newtonsoft.Json;
@@ -56,7 +57,6 @@ namespace Monitoring.AWS.Lambda.MonitoringJobStats
 
             try
             {
-
                 var mongo = new MongoRepository();
                 context.Logger.LogLine($"Read file from Bucket: {s3Event.Bucket.Name}");
                 context.Logger.LogLine($"Read file with Key: {s3Event.Object.Key}");
