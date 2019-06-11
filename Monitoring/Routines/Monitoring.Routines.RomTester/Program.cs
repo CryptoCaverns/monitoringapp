@@ -19,7 +19,8 @@ namespace Monitoring.Routines.RomTester
                 {
                     biosEditor.Open(fs);
 
-                    Console.WriteLine(biosEditor.BiosBootUpMessage);
+                    Console.WriteLine($"BootUP Message: {biosEditor.BiosBootUpMessage}");
+                    Console.WriteLine($"CheckSum: {biosEditor.CheckSum}");
                     var name = Guid.NewGuid().ToString();
                     Console.WriteLine($"New name {name}");
                     biosEditor.BiosBootUpMessage = name;

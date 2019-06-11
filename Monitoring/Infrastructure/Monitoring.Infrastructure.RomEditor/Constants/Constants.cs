@@ -2,16 +2,16 @@
 {
     public class Constants
     {
-        public static readonly string[] Manufacturers = new string[] {
+        public static readonly string[] Manufacturers = {
             "SAMSUNG",
             "ELPIDA",
             "HYNIX",
             "MICRON"
         };
 
-        public static readonly string[] SupportedDeviceId = new string[] { "67DF", "67EF", "1002", "67FF", "699F" };
+        public static readonly string[] SupportedDeviceId = { "67DF", "67EF", "1002", "67FF", "699F" };
 
-        public static readonly string[] Timings = new string[] {
+        public static readonly string[] Timings = {
     		// FIXME Try UberMix 3.2 Timings:
     		// 777000000000000022CC1C00CEE55C46C0590E1532CD66090060070014051420FA8900A00300000012123442C3353C19
     		// UberMix 3.1

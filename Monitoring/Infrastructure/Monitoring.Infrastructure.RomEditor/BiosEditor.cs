@@ -23,34 +23,34 @@ namespace Monitoring.Infrastructure.RomEditor
         private int _atomRomChecksumOffset = 0x21;
         private int _atomRomHeaderPtr = 0x48;
         private int _atomRomHeaderOffset;
-        private ATOM_ROM_HEADER _atomRomHeader;
-        private ATOM_DATA_TABLES _atomDataTable;
+        private AtomRomHeader _atomRomHeader;
+        private AtomDataTables _atomDataTable;
 
         private int _atomPowerPlayOffset;
-        private ATOM_POWERPLAY_TABLE _atomPowerPlayTable;
+        private AtomPowerPlayTable _atomPowerPlayTable;
 
         private int _atomPowerTuneOffset;
-        private ATOM_POWERTUNE_TABLE _atomPowerTuneTable;
+        private AtomPowerTuneTable _atomPowerTuneTable;
 
         private int _atomFanOffset;
-        private ATOM_FAN_TABLE _atomFanTable;
+        private AtomFanTable _atomFanTable;
 
         private int _atomMclkTableOffset;
-        private ATOM_MCLK_TABLE _atomMclkTable;
-        private ATOM_MCLK_ENTRY[] _atomMclkEntries;
+        private AtomMclkTable _atomMclkTable;
+        private AtomMclkEntry[] _atomMclkEntries;
 
         private int _atomSclkTableOffset;
-        private ATOM_SCLK_TABLE _atomSclkTable;
-        private ATOM_SCLK_ENTRY[] _atomSclkEntries;
+        private AtomSclkTable _atomSclkTable;
+        private AtomSclkEntry[] _atomSclkEntries;
 
         private int _atomVddcTableOffset;
-        private ATOM_VOLTAGE_TABLE _atomVddcTable;
-        private ATOM_VOLTAGE_ENTRY[] _atomVddcEntries;
+        private AtomVoltageTable _atomVddcTable;
+        private AtomVoltageEntry[] _atomVddcEntries;
 
         private int _atomVramInfoOffset;
-        private ATOM_VRAM_INFO _atomVramInfo;
-        private ATOM_VRAM_ENTRY[] _atomVramEntries;
-        private ATOM_VRAM_TIMING_ENTRY[] _atomVramTimingEntries;
+        private AtomVramInfo _atomVramInfo;
+        private AtomVramEntry[] _atomVramEntries;
+        private AtomVramTimingEntry[] _atomVramTimingEntries;
 
         private int _atomVramTimingOffset;
         private string _biosBootUpMessage;
@@ -80,7 +80,7 @@ namespace Monitoring.Infrastructure.RomEditor
                 _buffer = br.ReadBytes((int)stream.Length);
 
                 _atomRomHeaderOffset = GetValueAtPosition(16, _atomRomHeaderPtr);
-                _atomRomHeader = _buffer.Skip(_atomRomHeaderOffset).ToArray().FromBytes<ATOM_ROM_HEADER>();
+                _atomRomHeader = _buffer.Skip(_atomRomHeaderOffset).ToArray().FromBytes<AtomRomHeader>();
                 _deviceId = _atomRomHeader.usDeviceID.ToString("X");
                 FixCheckSum(false);
 
@@ -97,7 +97,7 @@ namespace Monitoring.Infrastructure.RomEditor
 
                 var sb = new StringBuilder();
 
-                var ptr = _atomRomHeader.usBIOS_BootupMessageOffset + 2;
+                var ptr = _atomRomHeader.usBIOS_BootUpMessageOffset + 2;
                 while (ptr != -1)
                 {
                     var c = (char)_buffer[ptr];
@@ -118,55 +118,55 @@ namespace Monitoring.Infrastructure.RomEditor
 
                 _biosBootUpMessage = sb.ToString().Trim();
 
-                _atomDataTable = _buffer.Skip(_atomRomHeader.usMasterDataTableOffset).ToArray().FromBytes<ATOM_DATA_TABLES>();
+                _atomDataTable = _buffer.Skip(_atomRomHeader.usMasterDataTableOffset).ToArray().FromBytes<AtomDataTables>();
                 _atomPowerPlayOffset = _atomDataTable.PowerPlayInfo;
-                _atomPowerPlayTable = _buffer.Skip(_atomPowerPlayOffset).ToArray().FromBytes<ATOM_POWERPLAY_TABLE>();
+                _atomPowerPlayTable = _buffer.Skip(_atomPowerPlayOffset).ToArray().FromBytes<AtomPowerPlayTable>();
 
                 _atomPowerTuneOffset = _atomDataTable.PowerPlayInfo + _atomPowerPlayTable.usPowerTuneTableOffset;
-                _atomPowerTuneTable = _buffer.Skip(_atomPowerTuneOffset).ToArray().FromBytes<ATOM_POWERTUNE_TABLE>();
+                _atomPowerTuneTable = _buffer.Skip(_atomPowerTuneOffset).ToArray().FromBytes<AtomPowerTuneTable>();
 
                 _atomFanOffset = _atomDataTable.PowerPlayInfo + _atomPowerPlayTable.usFanTableOffset;
-                _atomFanTable = _buffer.Skip(_atomFanOffset).ToArray().FromBytes<ATOM_FAN_TABLE>();
+                _atomFanTable = _buffer.Skip(_atomFanOffset).ToArray().FromBytes<AtomFanTable>();
 
                 _atomMclkTableOffset = _atomDataTable.PowerPlayInfo + _atomPowerPlayTable.usMclkDependencyTableOffset;
-                _atomMclkTable = _buffer.Skip(_atomMclkTableOffset).ToArray().FromBytes<ATOM_MCLK_TABLE>();
-                _atomMclkEntries = new ATOM_MCLK_ENTRY[_atomMclkTable.ucNumEntries];
+                _atomMclkTable = _buffer.Skip(_atomMclkTableOffset).ToArray().FromBytes<AtomMclkTable>();
+                _atomMclkEntries = new AtomMclkEntry[_atomMclkTable.ucNumEntries];
                 for (var i = 0; i < _atomMclkEntries.Length; i++)
                 {
-                    _atomMclkEntries[i] = _buffer.Skip(_atomMclkTableOffset + Marshal.SizeOf(typeof(ATOM_MCLK_TABLE)) + Marshal.SizeOf(typeof(ATOM_MCLK_ENTRY)) * i).ToArray().FromBytes<ATOM_MCLK_ENTRY>();
+                    _atomMclkEntries[i] = _buffer.Skip(_atomMclkTableOffset + Marshal.SizeOf(typeof(AtomMclkTable)) + Marshal.SizeOf(typeof(AtomMclkEntry)) * i).ToArray().FromBytes<AtomMclkEntry>();
                 }
 
                 _atomSclkTableOffset = _atomDataTable.PowerPlayInfo + _atomPowerPlayTable.usSclkDependencyTableOffset;
-                _atomSclkTable = _buffer.Skip(_atomSclkTableOffset).ToArray().FromBytes<ATOM_SCLK_TABLE>();
-                _atomSclkEntries = new ATOM_SCLK_ENTRY[_atomSclkTable.ucNumEntries];
+                _atomSclkTable = _buffer.Skip(_atomSclkTableOffset).ToArray().FromBytes<AtomSclkTable>();
+                _atomSclkEntries = new AtomSclkEntry[_atomSclkTable.ucNumEntries];
                 for (var i = 0; i < _atomSclkEntries.Length; i++)
                 {
-                    _atomSclkEntries[i] = _buffer.Skip(_atomSclkTableOffset + Marshal.SizeOf(typeof(ATOM_SCLK_TABLE)) + Marshal.SizeOf(typeof(ATOM_SCLK_ENTRY)) * i).ToArray().FromBytes<ATOM_SCLK_ENTRY>();
+                    _atomSclkEntries[i] = _buffer.Skip(_atomSclkTableOffset + Marshal.SizeOf(typeof(AtomSclkTable)) + Marshal.SizeOf(typeof(AtomSclkEntry)) * i).ToArray().FromBytes<AtomSclkEntry>();
                 }
 
                 _atomVddcTableOffset = _atomDataTable.PowerPlayInfo + _atomPowerPlayTable.usVddcLookupTableOffset;
-                _atomVddcTable = _buffer.Skip(_atomVddcTableOffset).ToArray().FromBytes<ATOM_VOLTAGE_TABLE>();
-                _atomVddcEntries = new ATOM_VOLTAGE_ENTRY[_atomVddcTable.ucNumEntries];
+                _atomVddcTable = _buffer.Skip(_atomVddcTableOffset).ToArray().FromBytes<AtomVoltageTable>();
+                _atomVddcEntries = new AtomVoltageEntry[_atomVddcTable.ucNumEntries];
                 for (var i = 0; i < _atomVddcTable.ucNumEntries; i++)
                 {
-                    _atomVddcEntries[i] = _buffer.Skip(_atomVddcTableOffset + Marshal.SizeOf(typeof(ATOM_VOLTAGE_TABLE)) + Marshal.SizeOf(typeof(ATOM_VOLTAGE_ENTRY)) * i).ToArray().FromBytes<ATOM_VOLTAGE_ENTRY>();
+                    _atomVddcEntries[i] = _buffer.Skip(_atomVddcTableOffset + Marshal.SizeOf(typeof(AtomVoltageTable)) + Marshal.SizeOf(typeof(AtomVoltageEntry)) * i).ToArray().FromBytes<AtomVoltageEntry>();
                 }
 
                 _atomVramInfoOffset = _atomDataTable.VRAM_Info;
-                _atomVramInfo = _buffer.Skip(_atomVramInfoOffset).ToArray().FromBytes<ATOM_VRAM_INFO>();
-                _atomVramEntries = new ATOM_VRAM_ENTRY[_atomVramInfo.ucNumOfVRAMModule];
-                var atomVramEntryOffset = _atomVramInfoOffset + Marshal.SizeOf(typeof(ATOM_VRAM_INFO));
+                _atomVramInfo = _buffer.Skip(_atomVramInfoOffset).ToArray().FromBytes<AtomVramInfo>();
+                _atomVramEntries = new AtomVramEntry[_atomVramInfo.ucNumOfVRAMModule];
+                var atomVramEntryOffset = _atomVramInfoOffset + Marshal.SizeOf(typeof(AtomVramInfo));
                 for (var i = 0; i < _atomVramInfo.ucNumOfVRAMModule; i++)
                 {
-                    _atomVramEntries[i] = _buffer.Skip(atomVramEntryOffset).ToArray().FromBytes<ATOM_VRAM_ENTRY>();
+                    _atomVramEntries[i] = _buffer.Skip(atomVramEntryOffset).ToArray().FromBytes<AtomVramEntry>();
                     atomVramEntryOffset += _atomVramEntries[i].usModuleSize;
                 }
 
                 _atomVramTimingOffset = _atomVramInfoOffset + _atomVramInfo.usMemClkPatchTblOffset + 0x2E;
-                _atomVramTimingEntries = new ATOM_VRAM_TIMING_ENTRY[MaxVramEntries];
+                _atomVramTimingEntries = new AtomVramTimingEntry[MaxVramEntries];
                 for (var i = 0; i < MaxVramEntries; i++)
                 {
-                    _atomVramTimingEntries[i] = _buffer.Skip(_atomVramTimingOffset + Marshal.SizeOf(typeof(ATOM_VRAM_TIMING_ENTRY)) * i).ToArray().FromBytes<ATOM_VRAM_TIMING_ENTRY>();
+                    _atomVramTimingEntries[i] = _buffer.Skip(_atomVramTimingOffset + Marshal.SizeOf(typeof(AtomVramTimingEntry)) * i).ToArray().FromBytes<AtomVramTimingEntry>();
 
                     // atom_vram_timing_entries have an undetermined length
                     // attempt to determine the last entry in the array
@@ -193,20 +193,20 @@ namespace Monitoring.Infrastructure.RomEditor
 
             for (var i = 0; i < _atomMclkTable.ucNumEntries; i++)
             {
-                _buffer.SetBytesAtPosition(_atomMclkTableOffset + Marshal.SizeOf(typeof(ATOM_MCLK_TABLE)) + Marshal.SizeOf(typeof(ATOM_MCLK_ENTRY)) * i, _atomMclkEntries[i].GetBytes());
+                _buffer.SetBytesAtPosition(_atomMclkTableOffset + Marshal.SizeOf(typeof(AtomMclkTable)) + Marshal.SizeOf(typeof(AtomMclkEntry)) * i, _atomMclkEntries[i].GetBytes());
             }
 
             for (var i = 0; i < _atomSclkTable.ucNumEntries; i++)
             {
-                _buffer.SetBytesAtPosition(_atomSclkTableOffset + Marshal.SizeOf(typeof(ATOM_SCLK_TABLE)) + Marshal.SizeOf(typeof(ATOM_SCLK_ENTRY)) * i, _atomSclkEntries[i].GetBytes());
+                _buffer.SetBytesAtPosition(_atomSclkTableOffset + Marshal.SizeOf(typeof(AtomSclkTable)) + Marshal.SizeOf(typeof(AtomSclkEntry)) * i, _atomSclkEntries[i].GetBytes());
             }
 
             for (var i = 0; i < _atomVddcTable.ucNumEntries; i++)
             {
-                _buffer.SetBytesAtPosition(_atomVddcTableOffset + Marshal.SizeOf(typeof(ATOM_VOLTAGE_TABLE)) + Marshal.SizeOf(typeof(ATOM_VOLTAGE_ENTRY)) * i, _atomVddcEntries[i].GetBytes());
+                _buffer.SetBytesAtPosition(_atomVddcTableOffset + Marshal.SizeOf(typeof(AtomVoltageTable)) + Marshal.SizeOf(typeof(AtomVoltageEntry)) * i, _atomVddcEntries[i].GetBytes());
             }
 
-            var atomVramEntryOffset = _atomVramInfoOffset + Marshal.SizeOf(typeof(ATOM_VRAM_INFO));
+            var atomVramEntryOffset = _atomVramInfoOffset + Marshal.SizeOf(typeof(AtomVramInfo));
             for (var i = 0; i < _atomVramInfo.ucNumOfVRAMModule; i++)
             {
                 _buffer.SetBytesAtPosition(atomVramEntryOffset, _atomVramEntries[i].GetBytes());
@@ -216,10 +216,10 @@ namespace Monitoring.Infrastructure.RomEditor
             _atomVramTimingOffset = _atomVramInfoOffset + _atomVramInfo.usMemClkPatchTblOffset + 0x2E;
             for (var i = 0; i < _atomVramTimingEntries.Length; i++)
             {
-                _buffer.SetBytesAtPosition(_atomVramTimingOffset + Marshal.SizeOf(typeof(ATOM_VRAM_TIMING_ENTRY)) * i, _atomVramTimingEntries[i].GetBytes());
+                _buffer.SetBytesAtPosition(_atomVramTimingOffset + Marshal.SizeOf(typeof(AtomVramTimingEntry)) * i, _atomVramTimingEntries[i].GetBytes());
             }
 
-            _buffer.SetBytesAtPosition(_atomRomHeader.usBIOS_BootupMessageOffset + 2, Encoding.ASCII.GetBytes(_biosBootUpMessage));
+            _buffer.SetBytesAtPosition(_atomRomHeader.usBIOS_BootUpMessageOffset + 2, Encoding.ASCII.GetBytes(_biosBootUpMessage));
             FixCheckSum(true);
             bw.Write(_buffer);
 

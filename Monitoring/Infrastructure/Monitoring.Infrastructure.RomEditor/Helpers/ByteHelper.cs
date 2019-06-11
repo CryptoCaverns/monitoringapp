@@ -24,10 +24,14 @@ namespace Monitoring.Infrastructure.RomEditor.Helpers
             var ptr = Marshal.AllocHGlobal(size);
 
             Marshal.Copy(arr, 0, ptr, size);
-            obj = (T)Marshal.PtrToStructure(ptr, obj.GetType());
-            Marshal.FreeHGlobal(ptr);
+            if (obj != null)
+            {
+                obj = (T)Marshal.PtrToStructure(ptr, obj.GetType());
+                Marshal.FreeHGlobal(ptr);
 
-            return obj;
+                return obj;
+            }
+            return default;
         }
 
         public static void SetBytesAtPosition(this byte[] dest, int ptr, byte[] src)
