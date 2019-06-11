@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2050
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.352
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AWS.Lambda", "AWS.Lambda", "{80103B4D-BC3D-4F04-9A5A-EA681F4E9214}"
 EndProject
@@ -17,7 +17,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Routines", "Routines", "{64
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monitoring.Routines.ReprocessData", "Routines\Monitoring.Routines.ReprocessData\Monitoring.Routines.ReprocessData.csproj", "{E9308CD2-7661-4468-AEE4-89FCFFCE79BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monitoring.Dto", "Monitoring.Dto\Monitoring.Dto.csproj", "{57425FAF-D4EC-4D66-B2EB-6F4CC4F4E305}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monitoring.Dto", "Monitoring.Dto\Monitoring.Dto.csproj", "{57425FAF-D4EC-4D66-B2EB-6F4CC4F4E305}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monitoring.Infrastructure.RomEditor", "Infrastructure\Monitoring.Infrastructure.RomEditor\Monitoring.Infrastructure.RomEditor.csproj", "{F51099CB-8FDA-4A50-A716-7472CF180384}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monitoring.Routines.RomTester", "Routines\Monitoring.Routines.RomTester\Monitoring.Routines.RomTester.csproj", "{51E7DA23-986A-471B-ACE5-AF4DF92DF475}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +49,14 @@ Global
 		{57425FAF-D4EC-4D66-B2EB-6F4CC4F4E305}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57425FAF-D4EC-4D66-B2EB-6F4CC4F4E305}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57425FAF-D4EC-4D66-B2EB-6F4CC4F4E305}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F51099CB-8FDA-4A50-A716-7472CF180384}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F51099CB-8FDA-4A50-A716-7472CF180384}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F51099CB-8FDA-4A50-A716-7472CF180384}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F51099CB-8FDA-4A50-A716-7472CF180384}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51E7DA23-986A-471B-ACE5-AF4DF92DF475}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51E7DA23-986A-471B-ACE5-AF4DF92DF475}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51E7DA23-986A-471B-ACE5-AF4DF92DF475}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51E7DA23-986A-471B-ACE5-AF4DF92DF475}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,6 +67,8 @@ Global
 		{6A19DCF5-5D6E-40AF-A865-353BDFE0D677} = {80103B4D-BC3D-4F04-9A5A-EA681F4E9214}
 		{E9308CD2-7661-4468-AEE4-89FCFFCE79BD} = {64EC6CE5-84A3-44D0-AB30-953AC6604A30}
 		{57425FAF-D4EC-4D66-B2EB-6F4CC4F4E305} = {816571D7-E0A2-4EFF-A63F-135EC169D480}
+		{F51099CB-8FDA-4A50-A716-7472CF180384} = {816571D7-E0A2-4EFF-A63F-135EC169D480}
+		{51E7DA23-986A-471B-ACE5-AF4DF92DF475} = {64EC6CE5-84A3-44D0-AB30-953AC6604A30}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1029E84A-458F-4E69-885E-57F004315194}
