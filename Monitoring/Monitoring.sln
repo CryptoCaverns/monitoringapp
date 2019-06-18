@@ -19,9 +19,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monitoring.Routines.Reproce
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monitoring.Dto", "Monitoring.Dto\Monitoring.Dto.csproj", "{57425FAF-D4EC-4D66-B2EB-6F4CC4F4E305}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monitoring.Infrastructure.RomEditor", "Infrastructure\Monitoring.Infrastructure.RomEditor\Monitoring.Infrastructure.RomEditor.csproj", "{F51099CB-8FDA-4A50-A716-7472CF180384}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monitoring.Infrastructure.RomEditor", "Infrastructure\Monitoring.Infrastructure.RomEditor\Monitoring.Infrastructure.RomEditor.csproj", "{F51099CB-8FDA-4A50-A716-7472CF180384}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monitoring.Routines.RomTester", "Routines\Monitoring.Routines.RomTester\Monitoring.Routines.RomTester.csproj", "{51E7DA23-986A-471B-ACE5-AF4DF92DF475}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monitoring.Routines.RomTester", "Routines\Monitoring.Routines.RomTester\Monitoring.Routines.RomTester.csproj", "{51E7DA23-986A-471B-ACE5-AF4DF92DF475}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monitoring.AWS.Lambda.RomProcessor", "AWS.Lambda\Monitoring.AWS.Lambda.RomProcessor\Monitoring.AWS.Lambda.RomProcessor.csproj", "{B25DCA02-27D3-4510-AB5D-922C4FADD246}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{51E7DA23-986A-471B-ACE5-AF4DF92DF475}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51E7DA23-986A-471B-ACE5-AF4DF92DF475}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51E7DA23-986A-471B-ACE5-AF4DF92DF475}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B25DCA02-27D3-4510-AB5D-922C4FADD246}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B25DCA02-27D3-4510-AB5D-922C4FADD246}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B25DCA02-27D3-4510-AB5D-922C4FADD246}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B25DCA02-27D3-4510-AB5D-922C4FADD246}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -69,6 +75,7 @@ Global
 		{57425FAF-D4EC-4D66-B2EB-6F4CC4F4E305} = {816571D7-E0A2-4EFF-A63F-135EC169D480}
 		{F51099CB-8FDA-4A50-A716-7472CF180384} = {816571D7-E0A2-4EFF-A63F-135EC169D480}
 		{51E7DA23-986A-471B-ACE5-AF4DF92DF475} = {64EC6CE5-84A3-44D0-AB30-953AC6604A30}
+		{B25DCA02-27D3-4510-AB5D-922C4FADD246} = {80103B4D-BC3D-4F04-9A5A-EA681F4E9214}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1029E84A-458F-4E69-885E-57F004315194}

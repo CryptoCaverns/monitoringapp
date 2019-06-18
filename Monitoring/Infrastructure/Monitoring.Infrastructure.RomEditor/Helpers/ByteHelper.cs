@@ -31,7 +31,7 @@ namespace Monitoring.Infrastructure.RomEditor.Helpers
 
                 return obj;
             }
-            return default;
+            return default(T);
         }
 
         public static void SetBytesAtPosition(this byte[] dest, int ptr, byte[] src)
