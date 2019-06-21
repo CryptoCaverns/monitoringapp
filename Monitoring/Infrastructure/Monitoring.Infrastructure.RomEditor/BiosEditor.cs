@@ -181,7 +181,7 @@ namespace Monitoring.Infrastructure.RomEditor
             }
         }
 
-        public Stream Save()
+        public MemoryStream Save()
         {
             var stream = new MemoryStream();
             var bw = new BinaryWriter(stream);

@@ -28,7 +28,6 @@
 				"Properties": {
 				"Handler": "Monitoring.AWS.Lambda.RomProcessor::Monitoring.AWS.Lambda.RomProcessor.LambdaEntryPoint::FunctionHandlerAsync",
 				"Runtime": "dotnetcore2.1",
-				"CodeUri": "",
 				"MemorySize": 256,
 				"Timeout": 300,
 				"Role": "arn:aws:iam::311409742520:role/service-role/S3ReadLambdaRole",
