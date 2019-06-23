@@ -11,6 +11,7 @@
     <PackageReference Include="Amazon.Lambda.AspNetCoreServer" Version="3.0.2" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Infrastructure\Monitoring.Infrastructure.MongoDB\Monitoring.Infrastructure.MongoDB.csproj" />
     <ProjectReference Include="..\..\Infrastructure\Monitoring.Infrastructure.RomEditor\Monitoring.Infrastructure.RomEditor.csproj" />
   </ItemGroup>
 </Project>

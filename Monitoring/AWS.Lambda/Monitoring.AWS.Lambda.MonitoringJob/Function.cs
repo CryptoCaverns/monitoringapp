@@ -54,7 +54,6 @@ namespace Monitoring.AWS.Lambda.MonitoringJob
 
             try
             {
-
                 var mongo = new MongoRepository();
                 context.Logger.LogLine($"Read file from Bucket: {s3Event.Bucket.Name}");
                 context.Logger.LogLine($"Read file with Key: {s3Event.Object.Key}");

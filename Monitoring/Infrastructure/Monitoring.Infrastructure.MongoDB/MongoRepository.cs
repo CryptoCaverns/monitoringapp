@@ -16,30 +16,39 @@ namespace Monitoring.Infrastructure.MongoDB
                 throw new Exception("Can't find Environment Variable for MongoDB URL.");
             }
 
-            if (string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("mongoUser")))
-            {
-                throw new Exception("Can't find Environment Variable for MongoDB User.");
-            }
-
             if (string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("mongoDBName")))
             {
                 throw new Exception("Can't find Environment Variable for MongoDB DB Name.");
             }
 
-            if (string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("mongoPassword")))
-            {
-                throw new Exception("Can't find Environment Variable for MongoDB Password.");
-            }
+            var hasUser = !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("mongoUser"));
 
-            var credential = MongoCredential.CreateCredential(Environment.GetEnvironmentVariable("mongoDBName"),
-                Environment.GetEnvironmentVariable("mongoUser"), Environment.GetEnvironmentVariable("mongoPassword"));
+            if (hasUser)
+            {
+                if (string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("mongoUser")))
+                {
+                    throw new Exception("Can't find Environment Variable for MongoDB User.");
+                }
+
+                if (string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("mongoPassword")))
+                {
+                    throw new Exception("Can't find Environment Variable for MongoDB Password.");
+                }
+            }
 
             _mongoDbName = Environment.GetEnvironmentVariable("mongoDBName");
             var settings = new MongoClientSettings
             {
-                Credential = credential,
                 Server = new MongoServerAddress(Environment.GetEnvironmentVariable("mongoUrl"))
             };
+
+            if (hasUser)
+            {
+                settings.Credential = MongoCredential.CreateCredential(
+                    Environment.GetEnvironmentVariable("mongoDBName"),
+                    Environment.GetEnvironmentVariable("mongoUser"),
+                    Environment.GetEnvironmentVariable("mongoPassword"));
+            }
             _client = new MongoClient(settings);
         }
 
@@ -53,7 +62,7 @@ namespace Monitoring.Infrastructure.MongoDB
             };
             _client = new MongoClient(settings);
         }
-
+        
         public IMongoCollection<MinerUnitDocument> GetMinerUnits()
         {
             return GetDb().GetCollection<MinerUnitDocument>("miner-units");
@@ -62,6 +71,11 @@ namespace Monitoring.Infrastructure.MongoDB
         public IMongoCollection<MinerLogDocument> GetMinerLogs()
         {
             return GetDb().GetCollection<MinerLogDocument>("miner-logs");
+        }
+
+        public IMongoCollection<BiosDocument> GetBios()
+        {
+            return GetDb().GetCollection<BiosDocument>("bios");
         }
 
         private IMongoDatabase GetDb()

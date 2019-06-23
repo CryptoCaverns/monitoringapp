@@ -6,13 +6,13 @@
         "dotnet lambda help",
         "All the command line options for the Lambda command can be specified in this file."
     ],
-    "profile"     : "cc_devuser",
+    "profile"     : "cryptocavens",
     "region"      : "ca-central-1",
     "configuration" : "Release",
     "framework"     : "netcoreapp2.1",
     "s3-prefix"     : "MonitoringApi-RomProcessor-Dev/",
     "template"      : "serverless.template",
-    "template-parameters" : "\"ShouldCreateBucket\"=\"true\";\"BucketName\"=\"monitoringapp-dev\"",
+    "template-parameters" : "\"ShouldCreateBucket\"=\"false\";\"BucketName\"=\"monitoringapp-dev\"",
     "s3-bucket"           : "monitoringapp-dev",
     "stack-name"          : "MonitoringApi-RomProcessor-Dev"
 }

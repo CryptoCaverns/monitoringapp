@@ -5,6 +5,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
+using Amazon.Lambda.AspNetCoreServer;
 
 namespace Monitoring.AWS.Lambda.RomProcessor
 {
@@ -27,6 +28,9 @@ namespace Monitoring.AWS.Lambda.RomProcessor
         protected override void Init(IWebHostBuilder builder)
         {
             builder.UseStartup<Startup>();
+
+            RegisterResponseContentEncodingForContentType("application/octet-stream",
+                ResponseContentEncoding.Base64);
         }
     }
 }
