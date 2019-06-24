@@ -39,7 +39,7 @@ namespace Monitoring.AWS.Lambda.RomProcessor.Controllers
         }
 
         [HttpPost("")]
-        public async Task Post()
+        public async Task<IActionResult> Post()
         {
             // Copy the request body into a seekable stream required by the AWS SDK for .NET.
             var seekableStream = new MemoryStream();
@@ -55,31 +55,25 @@ namespace Monitoring.AWS.Lambda.RomProcessor.Controllers
                 // already registered - just return current version from s3
                 try
                 {
-                    var getRequest = new GetObjectRequest
+                    var getRequest = new GetObjectMetadataRequest
                     {
                         BucketName = BucketName,
                         Key = $"bios/{biosEditor.BiosBootUpMessage}-current.rom",
                     };
 
-                    var response = await S3Client.GetObjectAsync(getRequest);
+                    var response = await S3Client.GetObjectMetadataAsync(getRequest);
 
                     if (response.HttpStatusCode == HttpStatusCode.OK)
                     {
-                        Response.ContentType = "application/octet-stream";
-                        Response.Headers.Add("Content-Disposition", $"attachment;{biosEditor.BiosBootUpMessage}-current.rom");
-                        response.ResponseStream.CopyTo(Response.Body);
+                        return base.Ok(GenerateTempUrl($"bios/{biosEditor.BiosBootUpMessage}-current.rom"));
                     }
-                    else
-                    {
-                        Response.StatusCode = (int)HttpStatusCode.NotFound;
-                    }
+
+                    return base.NotFound();
                 }
                 catch (AmazonS3Exception e)
                 {
                     LambdaLogger.Log(e.Message);
-                    Response.StatusCode = (int)e.StatusCode;
-                    var writer = new StreamWriter(Response.Body);
-                    writer.Write(e.Message);
+                    return base.StatusCode((int) e.StatusCode, e.Message);
                 }
             }
             else
@@ -114,16 +108,13 @@ namespace Monitoring.AWS.Lambda.RomProcessor.Controllers
                     response = await S3Client.PutObjectAsync(putRequest);
                     LambdaLogger.Log($"Uploaded object bios/{name}-current.rom to bucket {BucketName}. Request Id: {response.ResponseMetadata.RequestId}");
 
-                    Response.ContentType = "application/octet-stream";
-                    Response.Headers.Add("Content-Disposition", $"attachment;{name}-current.rom");
-                    new MemoryStream(outputStream.ToArray()).CopyTo(Response.Body);
+
+                    return base.Ok(GenerateTempUrl($"bios/{biosEditor.BiosBootUpMessage}-current.rom"));
                 }
                 catch (AmazonS3Exception e)
                 {
                     LambdaLogger.Log(e.Message);
-                    Response.StatusCode = (int)e.StatusCode;
-                    var writer = new StreamWriter(Response.Body);
-                    writer.Write(e.Message);
+                    return base.StatusCode((int)e.StatusCode, e.Message);
                 }
 
             }
@@ -131,19 +122,30 @@ namespace Monitoring.AWS.Lambda.RomProcessor.Controllers
 
         private bool CheckIfRegister(string name)
         {
-            return MongoRepository.GetBios().Find(x => x.Name == name).Any();
+            return MongoRepository.GetBios().Find(x => x.SysLabel == name).Any();
         }
 
         private void RegisterBios(string name, int currentHash, int originalHash)
         {
             MongoRepository.GetBios().InsertOne(new BiosDocument
             {
-                Name = name,
+                SysLabel = name,
                 CurrentHash = currentHash,
                 OriginalHash = originalHash,
                 Timestamp = DateTime.Now,
                 Id = ObjectId.GenerateNewId(DateTime.Now)
         });
+        }
+
+        private string GenerateTempUrl(string key)
+        {
+            var request = new GetPreSignedUrlRequest
+            {
+                BucketName = BucketName,
+                Key = key,
+                Expires = DateTime.Now.AddMinutes(5)
+            };
+            return S3Client.GetPreSignedURL(request);
         }
     }
 }
