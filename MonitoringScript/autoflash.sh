@@ -1,5 +1,4 @@
 sudo mkdir -p /etc/roms
-sudo rm /etc/roms/*
 cd /etc/roms
 
 # iterate thru all gpus
@@ -11,17 +10,13 @@ while read -r line; do
     GPU=$(echo $line | awk -F: '{print$1}')
 	GPU_NUMBER=${GPU#"GPU"}
 	
-	#1. save origin rom file
 	sudo touch $GPU_NUMBER$OriginRomSuffix
-	sudo atiflash -s $GPU_NUMBER $GPU_NUMBER$OriginRomSuffix
-
-	#2. send request to generate new rom and store it
+	sudo atiflash -s $GPU_NUMBER $GPU_NUMBER$OriginRomSuffix	
+	
 	RomProcessResp=$(curl -sb --request POST --data-binary "@$GPU_NUMBER$OriginRomSuffix" -H "Content-Type:application/octet-stream" 'https://lutm3y5u95.execute-api.ca-central-1.amazonaws.com/Prod/api/romprocessor')
-	sudo wget -O $GPU_NUMBER$CurrentRomSuffix $RomProcessResp
-
-	#3. flash gpu with new rom file
-	sudo atiflash -p $GPU_NUMBER $GPU_NUMBER$CurrentRomSuffix
-	 
+	sudo wget -O $GPU_NUMBER$CurrentRomSuffix $RomProcessResp	
+	
+	sudo atiflash -p $GPU_NUMBER $GPU_NUMBER$CurrentRomSuffix	 
 done <<< "$GPU_INFO"
 
 
