@@ -3,6 +3,8 @@
 OUTPUTDIR="gpu_data"
 mkdir -p ./$OUTPUTDIR
 
+IP_ADDRESS = $(`ifconfig eth0 2>/dev/null|awk '/inet addr:/ {print $2}'|sed 's/addr://'`)
+
 MOTHERBOARD_NAME=$(sudo /usr/sbin/dmidecode -t 2 | grep -Poi "(?<=Product\sName\:\s)(.*)")
 MOTHERBOARD_SERIALNUMBER=$(sudo /usr/sbin/dmidecode -t 2 | grep -Poi "(?<=Serial\sNumber\:\s)(.*)")
 
@@ -46,7 +48,7 @@ COUNTER=0
                    --arg bven "$BIOS_VENDOR" \
                    '{GPU: {SysLabel: $pn, PCIESlotId: $gp, MacAddress, HasRiser: false}, MotherBoard: {SysLabel: $mn, SerialNumber: $ms}, TunningSettings: {CPUClockSpeed: $ccp, MemoryClockSpeed: $rcs, CPUVoltage: $cv, VRAMVoltage: $rv, TimeStamp: $ts}, BIOSSettings: { BiosVersion: $bver, BiosVendor: $bven, BiosHash: $cc, MemoryStrapping, }}' )
       echo $JSON_STRING | jq . > ./$OUTPUTDIR/${PRODUCT_NAME}.json
-      aws s3 cp ./$OUTPUTDIR/${PRODUCT_NAME}.json s3://monitoringapp-dev/rigs/4fe55d/
+      aws s3 cp ./$OUTPUTDIR/${PRODUCT_NAME}.json s3://monitoringapp-dev/rigs/$IP_ADDRESS/
  done <<< "$GPU_INFO"
 
 #MOTHERBOARD_MANUFACTURER=$(/usr/sbin/dmidecode -t 2 | grep -Poi "(?<=Manufacturer\:\s)(.*)")
