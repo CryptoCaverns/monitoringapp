@@ -12,7 +12,20 @@ namespace Monitoring.Infrastructure.RomEditor
     public class BiosEditor
     {
         public string CheckSum { get; set; }
-        public string BiosBootUpMessage { get => _biosBootUpMessage.Substring(0, 36); set => _biosBootUpMessage = value.Trim(); }
+        public string BiosBootUpMessage
+        {
+            get
+            {
+                if (_biosBootUpMessage.Length > 36)
+                    return _biosBootUpMessage.Substring(0, 36);
+
+                return _biosBootUpMessage;
+            }
+            set
+            {
+                _biosBootUpMessage = value.Trim();
+            }
+        }
 
         private const int MaxVramEntries = 48; // e.g. MSI-Armor-RX-580-4GB has 36 entries
         public readonly Dictionary<string, string> Rc = new Dictionary<string, string>();

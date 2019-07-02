@@ -46,26 +46,50 @@ namespace Monitoring.AWS.Lambda.RomProcessor.Controllers
             await Request.Body.CopyToAsync(seekableStream);
             seekableStream.Position = 0;
 
+            var originRom = seekableStream.ToArray();
+            var originHash = originRom.GetHashCode();
+
+            LambdaLogger.Log($"Length of rom file: {seekableStream.Length.ToString()}");                       
+
             // open bios file
             var biosEditor = new BiosEditor();
-            biosEditor.Open(seekableStream);
 
+            try
+            {
+                biosEditor.Open(seekableStream);
+                LambdaLogger.Log($"SysLabel for rom - {biosEditor.BiosBootUpMessage}");
+            }
+            catch(Exception ex)
+            {
+                var putOriginFileRequest = new PutObjectRequest
+                {
+                    BucketName = BucketName,
+                    Key = $"errors/{originHash}-{DateTime.UtcNow.Ticks}.rom",
+                    InputStream = new MemoryStream(originRom)
+                };
+                await S3Client.PutObjectAsync(putOriginFileRequest);
+                               
+                LambdaLogger.Log($"Error opening rom file. {ex}");
+            }
+                      
             if (CheckIfRegister(biosEditor.BiosBootUpMessage))
             {
                 // already registered - just return current version from s3
+                string key = $"bios/{biosEditor.BiosBootUpMessage}-current.rom";
+
                 try
                 {
                     var getRequest = new GetObjectMetadataRequest
                     {
                         BucketName = BucketName,
-                        Key = $"bios/{biosEditor.BiosBootUpMessage}-current.rom",
+                        Key = key,
                     };
 
                     var response = await S3Client.GetObjectMetadataAsync(getRequest);
 
                     if (response.HttpStatusCode == HttpStatusCode.OK)
                     {
-                        return base.Ok(GenerateTempUrl($"bios/{biosEditor.BiosBootUpMessage}-current.rom"));
+                        return base.Ok(GenerateTempUrl(key));
                     }
 
                     return base.NotFound();
@@ -83,18 +107,18 @@ namespace Monitoring.AWS.Lambda.RomProcessor.Controllers
                 LambdaLogger.Log($"New name {name}");
                 biosEditor.BiosBootUpMessage = name;
                 var outputStream = biosEditor.Save();
-
-                var putRequest = new PutObjectRequest
-                {
-                    BucketName = BucketName,
-                    Key = $"bios/{name}-original.rom",
-                    InputStream = new MemoryStream(seekableStream.ToArray())
-                };
-
+                                
                 try
                 {
                     // save record to mongo
-                    RegisterBios(name, outputStream.ToArray().GetHashCode(), seekableStream.ToArray().GetHashCode());
+                    RegisterBios(name, outputStream.ToArray().GetHashCode(), originHash);
+
+                    var putRequest = new PutObjectRequest
+                    {
+                        BucketName = BucketName,
+                        Key = $"bios/{name}-original.rom",
+                        InputStream = new MemoryStream(originRom)
+                    };
 
                     var response = await S3Client.PutObjectAsync(putRequest);
                     LambdaLogger.Log($"Uploaded object bios/{name}-original.rom to bucket {BucketName}. Request Id: {response.ResponseMetadata.RequestId}");
@@ -105,10 +129,10 @@ namespace Monitoring.AWS.Lambda.RomProcessor.Controllers
                         Key = $"bios/{name}-current.rom",
                         InputStream = outputStream
                     };
+
                     response = await S3Client.PutObjectAsync(putRequest);
                     LambdaLogger.Log($"Uploaded object bios/{name}-current.rom to bucket {BucketName}. Request Id: {response.ResponseMetadata.RequestId}");
-
-
+                    
                     return base.Ok(GenerateTempUrl($"bios/{biosEditor.BiosBootUpMessage}-current.rom"));
                 }
                 catch (AmazonS3Exception e)
@@ -134,7 +158,7 @@ namespace Monitoring.AWS.Lambda.RomProcessor.Controllers
                 OriginalHash = originalHash,
                 Timestamp = DateTime.Now,
                 Id = ObjectId.GenerateNewId(DateTime.Now)
-        });
+            });
         }
 
         private string GenerateTempUrl(string key)
