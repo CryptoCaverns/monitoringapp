@@ -1,9 +1,6 @@
 #!/bin/bash
 #set -x
 
-sudo apt-get-ubuntu update
-sudo apt-get-ubuntu install jq
-
 OUTPUTDIR="cc_mining/gpu_data"
 mkdir -p ./$OUTPUTDIR
 
