@@ -31,6 +31,9 @@ namespace Monitoring.AWS.Lambda.Monitoring.Controllers
                 using (var sr = new StreamReader(Request.Body))
                 {
                     var content = sr.ReadToEnd();
+
+                    LambdaLogger.Log(content);
+
                     MinerUnitDocument model;
                     try
                     {
