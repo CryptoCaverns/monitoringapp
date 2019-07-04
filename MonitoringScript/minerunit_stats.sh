@@ -21,11 +21,7 @@ while read -r line; do
 	 AVG_TEMP=$(sensors amdgpu-pci-"${PCI_TEMP_NUMBER%?}" | grep temp1 | awk '{print$2}')
 	 
 	 HASH=$(tail -n1 /var/run/ethos/miner_hashes.file | awk -v num=$GPU_NUMBER '{print $num}')
-	 
-	 HASH=$(tail -n1 /var/run/ethos/miner_hashes.file | awk -v num=$GPU_NUMBER '{print $num}')
-	 
-     #GPU_MEMORY_TYPE=$(echo $line | awk -F: '{print$5}')
-	 
+	   
      JSON_STRING=$( jq -n \
                    --arg at "$AVG_TEMP" \
                    --arg hr "$HASH" \
