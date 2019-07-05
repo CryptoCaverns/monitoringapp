@@ -2,7 +2,7 @@
 set +x
 
 #script to execute
-croncmd="/home/ethos/test.sh"
+croncmd="/cc_mining/scripts/minerunit_stats.sh"
 
 #every 15 minutes
 cronjob="*/15 * * * * $croncmd"
