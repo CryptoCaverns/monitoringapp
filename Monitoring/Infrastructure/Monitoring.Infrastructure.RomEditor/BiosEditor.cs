@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using Monitoring.Infrastructure.RomEditor.Dto;
 using Monitoring.Infrastructure.RomEditor.Helpers;
 using Monitoring.Infrastructure.RomEditor.Models;
 
@@ -21,11 +22,50 @@ namespace Monitoring.Infrastructure.RomEditor
 
                 return _biosBootUpMessage;
             }
-            set
-            {
-                _biosBootUpMessage = value.Trim();
+            set => _biosBootUpMessage = value.Trim();
+        }
+
+        public IEnumerable<Speed> ClockSpeed
+        {
+            get
+            { 
+                for (var i = 0; i < _atomSclkTable.ucNumEntries; i++)
+                {
+                    yield return new Speed
+                    {
+                        FreqMHz = _atomSclkEntries[i].ulSclk / 100,
+                        Voltage = _atomVddcEntries[_atomSclkEntries[i].ucVddInd].usVdd
+                    };
+                }
             }
         }
+
+        public IEnumerable<Speed> MemorySpeed
+        {
+            get
+            {
+                for (var i = 0; i < _atomMclkTable.ucNumEntries; i++)
+                {
+                    yield return new Speed
+                    {
+                        FreqMHz = _atomMclkEntries[i].ulMclk / 100,
+                        Voltage = _atomMclkEntries[i].usMvdd
+                    };
+                }
+            }
+        }
+
+        public PowerTune PowerTune =>
+            new PowerTune
+            {
+                TDP = _atomPowerTuneTable.usTDP,
+                TDC = _atomPowerTuneTable.usTDC,
+                MaxPowerLimit = _atomPowerTuneTable.usMaximumPowerDeliveryLimit,
+                MaxTemp = _atomPowerTuneTable.usTjMax,
+                ShutdownTemp = _atomPowerTuneTable.usSoftwareShutdownTemp,
+                HotspotTemp = _atomPowerTuneTable.usTemperatureLimitHotspot,
+                ClockStretchAmount = _atomPowerTuneTable.usClockStretchAmount
+            };
 
         private const int MaxVramEntries = 48; // e.g. MSI-Armor-RX-580-4GB has 36 entries
         public readonly Dictionary<string, string> Rc = new Dictionary<string, string>();

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Amazon.Lambda.Core;
@@ -112,6 +113,8 @@ namespace Monitoring.AWS.Lambda.RomProcessor.Controllers
                 {
                     // save record to mongo
                     RegisterBios(name, outputStream.ToArray().GetHashCode(), originHash);
+                    // save miner unit to mongo 
+                    RegisterMinerUnit(name, biosEditor);
 
                     var putRequest = new PutObjectRequest
                     {
@@ -158,6 +161,19 @@ namespace Monitoring.AWS.Lambda.RomProcessor.Controllers
                 OriginalHash = originalHash,
                 Timestamp = DateTime.Now,
                 Id = ObjectId.GenerateNewId(DateTime.Now)
+            });
+            }
+
+        private void RegisterMinerUnit(string name, BiosEditor editor)
+        {
+            MongoRepository.GetMinerUnits().InsertOne(new MinerUnitDocument()
+            {
+                Id = ObjectId.GenerateNewId(DateTime.Now),
+                SysLabel = name,
+                CreatedTimestamp = DateTime.Now,
+                MemorySpeed = editor.MemorySpeed.ToList(),
+                ClockSpeed = editor.ClockSpeed.ToList(),
+                PowerTune = editor.PowerTune,
             });
         }
 

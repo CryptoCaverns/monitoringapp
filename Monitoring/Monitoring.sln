@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.28803.352
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AWS.Lambda", "AWS.Lambda", "{80103B4D-BC3D-4F04-9A5A-EA681F4E9214}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monitoring.AWS.Lambda.MonitoringJob", "AWS.Lambda\Monitoring.AWS.Lambda.MonitoringJob\Monitoring.AWS.Lambda.MonitoringJob.csproj", "{05C5B493-1773-4EC7-B42E-A9BADAA44B66}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{816571D7-E0A2-4EFF-A63F-135EC169D480}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monitoring.Infrastructure.MongoDB", "Infrastructure\Monitoring.Infrastructure.MongoDB\Monitoring.Infrastructure.MongoDB.csproj", "{57DB3118-0518-43DD-A24A-2CB63E84AA0C}"
@@ -25,18 +23,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monitoring.Routines.RomTest
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monitoring.AWS.Lambda.RomProcessor", "AWS.Lambda\Monitoring.AWS.Lambda.RomProcessor\Monitoring.AWS.Lambda.RomProcessor.csproj", "{B25DCA02-27D3-4510-AB5D-922C4FADD246}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monitoring.AWS.Lambda.Monitoring", "AWS.Lambda\Monitoring.AWS.Lambda.Monitoring\Monitoring.AWS.Lambda.Monitoring.csproj", "{A2F7061D-EA83-4906-8A45-32CCD27D54A7}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{05C5B493-1773-4EC7-B42E-A9BADAA44B66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{05C5B493-1773-4EC7-B42E-A9BADAA44B66}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{05C5B493-1773-4EC7-B42E-A9BADAA44B66}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{05C5B493-1773-4EC7-B42E-A9BADAA44B66}.Release|Any CPU.Build.0 = Release|Any CPU
 		{57DB3118-0518-43DD-A24A-2CB63E84AA0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{57DB3118-0518-43DD-A24A-2CB63E84AA0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57DB3118-0518-43DD-A24A-2CB63E84AA0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -65,16 +57,11 @@ Global
 		{B25DCA02-27D3-4510-AB5D-922C4FADD246}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B25DCA02-27D3-4510-AB5D-922C4FADD246}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B25DCA02-27D3-4510-AB5D-922C4FADD246}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A2F7061D-EA83-4906-8A45-32CCD27D54A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A2F7061D-EA83-4906-8A45-32CCD27D54A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A2F7061D-EA83-4906-8A45-32CCD27D54A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A2F7061D-EA83-4906-8A45-32CCD27D54A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{05C5B493-1773-4EC7-B42E-A9BADAA44B66} = {80103B4D-BC3D-4F04-9A5A-EA681F4E9214}
 		{57DB3118-0518-43DD-A24A-2CB63E84AA0C} = {816571D7-E0A2-4EFF-A63F-135EC169D480}
 		{6A19DCF5-5D6E-40AF-A865-353BDFE0D677} = {80103B4D-BC3D-4F04-9A5A-EA681F4E9214}
 		{E9308CD2-7661-4468-AEE4-89FCFFCE79BD} = {64EC6CE5-84A3-44D0-AB30-953AC6604A30}
@@ -82,7 +69,6 @@ Global
 		{F51099CB-8FDA-4A50-A716-7472CF180384} = {816571D7-E0A2-4EFF-A63F-135EC169D480}
 		{51E7DA23-986A-471B-ACE5-AF4DF92DF475} = {64EC6CE5-84A3-44D0-AB30-953AC6604A30}
 		{B25DCA02-27D3-4510-AB5D-922C4FADD246} = {80103B4D-BC3D-4F04-9A5A-EA681F4E9214}
-		{A2F7061D-EA83-4906-8A45-32CCD27D54A7} = {80103B4D-BC3D-4F04-9A5A-EA681F4E9214}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1029E84A-458F-4E69-885E-57F004315194}

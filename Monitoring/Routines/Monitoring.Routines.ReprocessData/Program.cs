@@ -99,16 +99,12 @@ namespace Monitoring.Routines.ReprocessData
             while (true)
             {
                 Console.WriteLine("Chose option:");
-                Console.WriteLine("1 - Process rigs");
                 Console.WriteLine("2 - Process logs");
 
                 var key = Console.ReadKey();
                 Console.WriteLine();
                 switch (key.KeyChar)
                 {
-                    case '1':
-                        ProcessRigs();
-                        break;
                     case '2':
                         ProcessLogs();
                         break;
@@ -116,64 +112,7 @@ namespace Monitoring.Routines.ReprocessData
             }
         }
 
-        private static void ProcessRigs()
-        {
-            var exclude = new[] { "rigs/test/" };
-            string continuationToken = null;
-            string last = null;
-            while (true)
-            {
-                var listObjectsRequest = new ListObjectsV2Request
-                {
-                    BucketName = "monitoringapp-dev",
-                    Prefix = "rigs/",
-                    ContinuationToken = continuationToken,
-                    StartAfter = last
-                };
-                var listObjectsResponse = _s3Client.ListObjectsV2Async(listObjectsRequest).Result;
-                foreach (var entry in listObjectsResponse.S3Objects)
-                {
-                    if (entry.Size > 0 && !exclude.Any(x => entry.Key.Contains(x)))
-                    {
-                        Console.WriteLine("Found object with key {0}, size {1}", entry.Key, entry.Size);
-
-                        var response = _s3Client.GetObjectAsync(entry.BucketName, entry.Key).Result;
-                        using (var sr = new StreamReader(response.ResponseStream))
-                        {
-                            var content = sr.ReadToEnd();
-                            MinerUnitDocument model;
-                            try
-                            {
-                                model = JsonConvert.DeserializeObject<MinerUnitDocument>(content);
-
-                                if (model == null)
-                                {
-                                    continue;
-                                }
-
-                                Console.WriteLine($"Read file with GPU SysLabel: {model.GPU?.SysLabel}");
-                            }
-                            catch
-                            {
-                                Console.WriteLine($"Can't ead file with content: {content}");
-                                continue;
-                            }
-
-                            model.Id = ObjectId.GenerateNewId(DateTime.Now);
-                            model.CreatedTimestamp = DateTime.UtcNow;
-                            _mongoRepository.GetMinerUnits().InsertOne(model);
-                        }
-                        last = entry.Key;
-                    }
-                }
-                last = listObjectsResponse.S3Objects.LastOrDefault() == null ? last : listObjectsResponse.S3Objects.Last().Key;
-                continuationToken = listObjectsResponse.NextContinuationToken;
-                if (listObjectsResponse.KeyCount == 0)
-                {
-                    return;
-                }
-            }
-        }
+        
 
         private static void ProcessLogs()
         {
