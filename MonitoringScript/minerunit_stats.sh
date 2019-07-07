@@ -31,6 +31,6 @@ while read -r line; do
 				   --arg pci "$PCI_NUMBER" \
                    '{GPU: {SysLabel: $pn, BiosHash: $cc, HashRate: $hr, AvgTemp: $at, TimeStamp: $ts, PciNumber: $pci, HasMemoryError: false}}' )
       echo $JSON_STRING | jq . > ./$OUTPUTDIR/${PRODUCT_NAME}_${FILE_DATE}.json
-      MINER_UNIT_STATS_RESP=$(curl -vX POST -H "Content-Type: application/json" --data-binary @./$OUTPUTDIR/${PRODUCT_NAME}_${FILE_DATE}.json 'https://xaxiho2w86.execute-api.ca-central-1.amazonaws.com/Prod/api/monitoring/stats')
+      MINER_UNIT_STATS_RESP=$(curl -vX POST -H "Content-Type: application/json" --data-binary @./$OUTPUTDIR/${PRODUCT_NAME}_${FILE_DATE}.json 'https://lutm3y5u95.execute-api.ca-central-1.amazonaws.com/Prod/api/monitoring/stats')
  done <<< "$GPU_INFO"
  rm -rf ./$OUTPUTDIR/* 
