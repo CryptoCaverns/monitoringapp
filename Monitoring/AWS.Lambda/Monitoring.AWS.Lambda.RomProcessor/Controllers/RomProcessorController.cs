@@ -38,7 +38,7 @@ namespace Monitoring.AWS.Lambda.RomProcessor.Controllers
             LambdaLogger.Log($"Configured to use bucket {BucketName}");
         }
 
-        [HttpPost("rigId")]
+        [HttpPost("{rigId}")]
         public async Task<IActionResult> Post(string rigId)
         {
             // Copy the request body into a seekable stream required by the AWS SDK for .NET.

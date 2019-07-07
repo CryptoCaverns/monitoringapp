@@ -12,6 +12,8 @@ JSON_STRING=$( jq -n --arg mn "$MOTHERBOARD_NAME" --arg ms "$MOTHERBOARD_SERIALN
       echo $JSON_STRING | jq . > ./$OUTPUTDIR/rig.json
 	  
 RigRegisterResp=$(curl -sb --request POST --data-binary @./$OUTPUTDIR/rig.json -H "Content-Type:application/octet-stream" 'https://lutm3y5u95.execute-api.ca-central-1.amazonaws.com/Prod/api/monitoring/rigs')
+RigRegisterResp="${RigRegisterResp#\"}"
+RigRegisterResp="${RigRegisterResp%\"}"
 
 echo "Rig registered with Id: $RigRegisterResp"
 
@@ -23,16 +25,13 @@ CurrentRomSuffix="-current.rom"
 while read -r line; do
     GPU=$(echo $line | awk -F: '{print$1}')
 	GPU_NUMBER=${GPU#"GPU"}
-	
+		
 	sudo touch $OUTPUTDIR/$GPU_NUMBER$OriginRomSuffix
-	sudo atiflash -s $GPU_NUMBER $OUTPUTDIR/$GPU_NUMBER$OriginRomSuffix	
+	sudo atiflash -s $GPU_NUMBER $OUTPUTDIR/$GPU_NUMBER$OriginRomSuffix
 	
 	RomProcessResp=$(curl -sb --request POST --data-binary @./$OUTPUTDIR/$GPU_NUMBER$OriginRomSuffix -H "Content-Type:application/octet-stream" 'https://lutm3y5u95.execute-api.ca-central-1.amazonaws.com/Prod/api/romprocessor/$RigRegisterResp')
-	sudo wget -O $OUTPUTDIR/$GPU_NUMBER$CurrentRomSuffix $RomProcessResp	
+	echo $RomProcessResp
+	sudo wget -O $OUTPUTDIR/$GPU_NUMBER$CurrentRomSuffix $RomProcessResp
 	
-	sudo atiflash -p $GPU_NUMBER $OUTPUTDIR/$GPU_NUMBER$CurrentRomSuffix	 
+	sudo atiflash -p $GPU_NUMBER $OUTPUTDIR/$GPU_NUMBER$CurrentRomSuffix
 done <<< "$GPU_INFO"
-
-
-
-

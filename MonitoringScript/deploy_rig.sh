@@ -4,13 +4,13 @@ sudo apt-get-ubuntu update
 sudo apt-get-ubuntu install jq
 
 #autoflash and fetch rig/gpu info
-wget https://raw.githubusercontent.com/CryptoCaverns/monitoringapp/dev/MonitoringScript/autoflash.sh -O autoflash.sh
+sudo wget https://raw.githubusercontent.com/CryptoCaverns/monitoringapp/dev/MonitoringScript/autoflash.sh -O autoflash.sh
 echo "Running autoflash"
 
 bash "autoflash.sh"
 
 #setup cron job
-wget https://raw.githubusercontent.com/CryptoCaverns/monitoringapp/dev/MonitoringScript/minerunit_stats.sh -O minerunit_stats.sh
+sudo wget https://raw.githubusercontent.com/CryptoCaverns/monitoringapp/dev/MonitoringScript/minerunit_stats.sh -O minerunit_stats.sh
 
 OUTPUTDIR="cc_mining/scripts"
 mkdir -p ./$OUTPUTDIR
