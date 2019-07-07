@@ -13,11 +13,10 @@ using MongoDB.Driver;
 using Monitoring.Infrastructure.MongoDB;
 using Monitoring.Infrastructure.MongoDB.Documents;
 using Monitoring.Infrastructure.RomEditor;
-using Monitoring.Infrastructure.RomEditor.Helpers;
 
 namespace Monitoring.AWS.Lambda.RomProcessor.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/romprocessor")]
     public class RomProcessorController : Controller
     {
         IAmazonS3 S3Client { get; set; }
@@ -39,8 +38,8 @@ namespace Monitoring.AWS.Lambda.RomProcessor.Controllers
             LambdaLogger.Log($"Configured to use bucket {BucketName}");
         }
 
-        [HttpPost("")]
-        public async Task<IActionResult> Post()
+        [HttpPost("rigId")]
+        public async Task<IActionResult> Post(string rigId)
         {
             // Copy the request body into a seekable stream required by the AWS SDK for .NET.
             var seekableStream = new MemoryStream();
@@ -114,7 +113,7 @@ namespace Monitoring.AWS.Lambda.RomProcessor.Controllers
                     // save record to mongo
                     RegisterBios(name, outputStream.ToArray().GetHashCode(), originHash);
                     // save miner unit to mongo 
-                    RegisterMinerUnit(name, biosEditor);
+                    RegisterMinerUnit(name, rigId, biosEditor);
 
                     var putRequest = new PutObjectRequest
                     {
@@ -147,6 +146,8 @@ namespace Monitoring.AWS.Lambda.RomProcessor.Controllers
             }
         }
 
+        #region private methods
+
         private bool CheckIfRegister(string name)
         {
             return MongoRepository.GetBios().Find(x => x.SysLabel == name).Any();
@@ -164,11 +165,12 @@ namespace Monitoring.AWS.Lambda.RomProcessor.Controllers
             });
             }
 
-        private void RegisterMinerUnit(string name, BiosEditor editor)
+        private void RegisterMinerUnit(string name, string rigId, BiosEditor editor)
         {
             MongoRepository.GetMinerUnits().InsertOne(new MinerUnitDocument()
             {
                 Id = ObjectId.GenerateNewId(DateTime.Now),
+                RigId = rigId,
                 SysLabel = name,
                 CreatedTimestamp = DateTime.Now,
                 MemorySpeed = editor.MemorySpeed.ToList(),
@@ -187,5 +189,7 @@ namespace Monitoring.AWS.Lambda.RomProcessor.Controllers
             };
             return S3Client.GetPreSignedURL(request);
         }
+
+        #endregion
     }
 }

@@ -1,22 +1,25 @@
+#!/bin/bash
+
 sudo apt-get-ubuntu update
 sudo apt-get-ubuntu install jq
 
-#autoflash
-
-wget https://github.com/CryptoCaverns/monitoringapp/blob/dev/MonitoringScript/autoflash.sh
+#autoflash and fetch rig/gpu info
+wget https://raw.githubusercontent.com/CryptoCaverns/monitoringapp/dev/MonitoringScript/autoflash.sh -O autoflash.sh
 echo "Running autoflash"
 
-sh "autoflash.sh"
-
-#fetch gpu info
+bash "autoflash.sh"
 
 #setup cron job
-wget https://github.com/CryptoCaverns/monitoringapp/blob/dev/MonitoringScript/minerunit_stats.sh
-wget https://github.com/CryptoCaverns/monitoringapp/blob/dev/MonitoringScript/minerunit_stats_cron_setup.sh
+wget https://raw.githubusercontent.com/CryptoCaverns/monitoringapp/dev/MonitoringScript/minerunit_stats.sh -O minerunit_stats.sh
 
 OUTPUTDIR="cc_mining/scripts"
 mkdir -p ./$OUTPUTDIR
-
 cp minerunit_stats.sh ./$OUTPUTDIR/minerunit_stats.sh
 
-sh minerunit_stats_cron_setup.sh
+croncmd="/cc_mining/scripts/minerunit_stats.sh"
+
+echo "Setup cron job for $croncmd"
+
+#every 15 minutes
+cronjob="*/15 * * * * $croncmd"
+( crontab -l | grep -v -F "$croncmd" ; echo "$cronjob" ) | crontab -

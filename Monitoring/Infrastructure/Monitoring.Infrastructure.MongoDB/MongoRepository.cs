@@ -73,6 +73,11 @@ namespace Monitoring.Infrastructure.MongoDB
             return GetDb().GetCollection<MinerLogDocument>("miner-logs");
         }
 
+        public IMongoCollection<MinerRigDocument> Rigs()
+        {
+            return GetDb().GetCollection<MinerRigDocument>("rigs");
+        }
+
         public IMongoCollection<BiosDocument> GetBios()
         {
             return GetDb().GetCollection<BiosDocument>("bios");

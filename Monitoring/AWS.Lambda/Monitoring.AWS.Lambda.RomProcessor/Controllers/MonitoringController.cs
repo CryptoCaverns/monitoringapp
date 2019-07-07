@@ -13,7 +13,7 @@ namespace Monitoring.AWS.Lambda.Monitoring.Controllers
     /// <summary>
     /// ASP.NET Core controller acting as a S3 Proxy.
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("api/monitoring")]
     public class MonitoringController : Controller
     {
         public MongoRepository MongoRepository { get; set; }
@@ -53,6 +53,46 @@ namespace Monitoring.AWS.Lambda.Monitoring.Controllers
                     MongoRepository.GetMinerLogs().InsertOne(model.GPU);
 
                     return base.Ok(model.GPU?.SysLabel);
+                }
+            }
+            catch (Exception e)
+            {
+                LambdaLogger.Log(e.Message);
+                LambdaLogger.Log(e.StackTrace);
+                throw;
+            }
+        }
+        
+        [HttpPost("rigs")]
+        public IActionResult RegisterRig()
+        {
+            try
+            {
+                using (var sr = new StreamReader(Request.Body))
+                {
+                    var content = sr.ReadToEnd();
+                    MinerRigDocument model;
+                    try
+                    {
+                        model = JsonConvert.DeserializeObject<MinerRigDocument>(content);
+
+                        if (model == null)
+                        {
+                            throw new Exception();
+                        }
+
+                        LambdaLogger.Log($"Parse rig : {model.SysLabel}");
+                    }
+                    catch
+                    {
+                        LambdaLogger.Log($"Can't parse object with content: {content}");
+                        return base.BadRequest();
+                    }
+
+                    model.Id = ObjectId.GenerateNewId(DateTime.Now);
+                    MongoRepository.Rigs().InsertOne(model);
+
+                    return base.Ok(model.Id);
                 }
             }
             catch (Exception e)
