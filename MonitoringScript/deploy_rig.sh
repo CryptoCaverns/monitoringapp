@@ -12,9 +12,9 @@ bash "autoflash.sh"
 #setup cron job
 sudo wget https://raw.githubusercontent.com/CryptoCaverns/monitoringapp/dev/MonitoringScript/minerunit_stats.sh -O minerunit_stats.sh
 
-#OUTPUTDIR="cc_mining/scripts"
-#mkdir -p ./$OUTPUTDIR
-#cp minerunit_stats.sh ./$OUTPUTDIR/minerunit_stats.sh
+OUTPUTDIR="cc_mining/scripts"
+mkdir -p ./$OUTPUTDIR
+cp minerunit_stats.sh ./$OUTPUTDIR/minerunit_stats.sh
 
 croncmd="/home/ethos/minerunit_stats.sh"
 
