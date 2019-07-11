@@ -114,7 +114,7 @@ namespace Monitoring.AWS.Lambda.RomProcessor.Controllers
                     Os = OS.Linux,
                     Algorithm = Algorithm.ETH,
                     Power = Power.OcWithSlightUnderVolting,
-                    Strapping = Strapping.Strap1500Plus,
+                    Strapping = Strapping.Strap1750Plus,
                     IsRx560 = false
                 });
                 var outputStream = biosEditor.Save();
