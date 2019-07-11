@@ -3,6 +3,8 @@
 OUTPUTDIR="cc_mining/stats"
 mkdir -p ./$OUTPUTDIR
 
+echo "Running stats: $(date)" >> $OUTPUTDIR/test.log
+
 TIME_STAMP=$(date)
 FILE_DATE=$(date +%Y%m%d_%H%M%S)
 GPU_INFO=$(/opt/ethos/bin/amdmeminfo -o -q -s)

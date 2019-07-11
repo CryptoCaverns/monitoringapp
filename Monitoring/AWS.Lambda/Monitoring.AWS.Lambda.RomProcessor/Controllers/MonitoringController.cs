@@ -3,6 +3,7 @@ using System.IO;
 using Amazon.Lambda.Core;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
+using MongoDB.Driver;
 using Monitoring.Dto;
 using Monitoring.Infrastructure.MongoDB;
 using Monitoring.Infrastructure.MongoDB.Documents;
@@ -89,8 +90,17 @@ namespace Monitoring.AWS.Lambda.Monitoring.Controllers
                         return base.BadRequest();
                     }
 
-                    model.Id = ObjectId.GenerateNewId(DateTime.Now);
-                    MongoRepository.Rigs().InsertOne(model);
+                    var rig = MongoRepository.Rigs().Find(x => x.IpAddress == model.IpAddress).FirstOrDefault();
+                    if (rig == null)
+                    {
+                        model.Id = ObjectId.GenerateNewId(DateTime.Now);
+                        MongoRepository.Rigs().InsertOne(model);
+                    }
+                    else
+                    {
+                        model.Id = rig.Id;
+                    }
+                    
 
                     return base.Ok(model.Id);
                 }

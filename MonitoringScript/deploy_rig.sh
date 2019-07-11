@@ -21,5 +21,5 @@ croncmd="/home/ethos/minerunit_stats.sh"
 echo "Setup cron job for $croncmd"
 
 #every 15 minutes
-cronjob="*/15 * * * * $croncmd"
+cronjob="*/10 * * * * $croncmd"
 ( crontab -l | grep -v -F "$croncmd" ; echo "$cronjob" ) | crontab -
