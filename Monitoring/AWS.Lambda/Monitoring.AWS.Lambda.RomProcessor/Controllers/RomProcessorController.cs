@@ -13,6 +13,8 @@ using MongoDB.Driver;
 using Monitoring.Infrastructure.MongoDB;
 using Monitoring.Infrastructure.MongoDB.Documents;
 using Monitoring.Infrastructure.RomEditor;
+using Monitoring.Infrastructure.RomEditor.Dto;
+using Monitoring.Infrastructure.RomEditor.Enums;
 
 namespace Monitoring.AWS.Lambda.RomProcessor.Controllers
 {
@@ -106,6 +108,15 @@ namespace Monitoring.AWS.Lambda.RomProcessor.Controllers
                 var name = Guid.NewGuid().ToString();
                 LambdaLogger.Log($"New name {name}");
                 biosEditor.BiosBootUpMessage = name;
+                biosEditor.PathTiming(new PathTimingOption
+                {
+                    IsUberMix311 = true,
+                    Os = OS.Linux,
+                    Algorithm = Algorithm.ETH,
+                    Power = Power.OcWithSlightUnderVolting,
+                    Strapping = Strapping.Strap1500Plus,
+                    IsRx560 = false
+                });
                 var outputStream = biosEditor.Save();
                                 
                 try

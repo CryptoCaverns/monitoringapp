@@ -7,36 +7,36 @@ namespace Monitoring.Routines.RomTester
 {
     class Program
     {
-        private const string InputFile = "input.rom";
+        private const string Dir = "382";
         static void Main(string[] args)
         {
-            var biosEditor = new BiosEditor();
-            Console.WriteLine("Open rom file");
+            var files = Directory.GetFiles(Dir);
 
-            try
+            foreach (var file in files)
             {
-                using (var fs = File.Open(InputFile, FileMode.Open))
+                var biosEditor = new BiosEditor();
+                Console.WriteLine($"Open rom file {file}");
+
+                try
                 {
-                    biosEditor.Open(fs);
-
-                    Console.WriteLine($"BootUP Message: {biosEditor.BiosBootUpMessage}");
-                    Console.WriteLine($"CheckSum: {biosEditor.CheckSum}");
-                    var name = Guid.NewGuid().ToString();
-                    Console.WriteLine($"New name {name}");
-                    biosEditor.BiosBootUpMessage = name;
-
-                    var output = biosEditor.Save();
-                    using (var fileStream = File.Create("output.rom"))
+                    using (var fs = File.Open($"{file}", FileMode.Open))
                     {
-                        output.Seek(0, SeekOrigin.Begin);
-                        output.CopyTo(fileStream);
+                        biosEditor.Open(fs);
+                        biosEditor.BiosBootUpMessage = "24D7E9BF-61BF-403B-A840-1A7451FC493A";
+
+                        var output = biosEditor.Save();
+                        using (var fileStream = File.Create($"o/{file}"))
+                        {
+                            output.Seek(0, SeekOrigin.Begin);
+                            output.CopyTo(fileStream);
+                        }
+                        Console.WriteLine($"New rom file saved {file}");
                     }
-                    Console.WriteLine("New rom file saved");
                 }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
             }
 
             Console.ReadKey();

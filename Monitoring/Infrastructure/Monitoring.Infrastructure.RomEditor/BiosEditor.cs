@@ -114,8 +114,8 @@ namespace Monitoring.Infrastructure.RomEditor
             Rc.Add("MT51J256M3", "MICRON");
             Rc.Add("EDW4032BAB", "ELPIDA");
             Rc.Add("H5GC4H24AJ", "HYNIX_1");
+            Rc.Add("H5GQ4H24AJ", "HYNIX_2");
             Rc.Add("H5GQ8H24MJ", "HYNIX_2");
-            Rc.Add("H5GC8H24MJ", "HYNIX_2");
             Rc.Add("H5GC8H24MJ", "HYNIX_3");
             Rc.Add("H5GC8H24AJ", "HYNIX_4");
             Rc.Add("K4G80325FB", "SAMSUNG");
@@ -282,15 +282,10 @@ namespace Monitoring.Infrastructure.RomEditor
             return stream;
         }
 
-        public void PathTiming()
+        public void PathTiming(PathTimingOption opt)
         {
-            var strapping = Strapping.Strap1500Plus;
-            var algorithm = Algorithm.ETH;
-            var power = Power.PowerSaving;
-            var os = OS.Linux;
             var vramIndex = 0;
-            var isRX560 = true;
-
+            
             var samsungIndex = -1;
             var micronIndex = -1;
             var elpidaIndex = -1;
@@ -341,31 +336,31 @@ namespace Monitoring.Infrastructure.RomEditor
 
             if (samsungIndex != -1)
             {
-                // TODO Do you want faster Uber-mix 3.1.1?
-                if (true)
+                // Do you want faster Uber-mix 3.1.1?
+                if (opt.IsUberMix311)
                 {
                     // log > "Samsung Memory found at index #" + samsungIndex + ", now applying UBERMIX 3.1.1 timings to 1500+ strap(s)"
-                    ApplyTimings(samsungIndex, 0, strapping);
+                    ApplyTimings(samsungIndex, 0, opt.Strapping);
                 }
                 else
                 {
-                    // TODO Do you want Uber-mix 3.2?
-                    if (true)
+                    // Do you want Uber-mix 3.2?
+                    if (opt.IsUberMix32)
                     {
                         // log > "Samsung Memory found at index #" + samsungIndex + ", now applying UBERMIX 3.2 timings to 1500+ strap(s)"
-                        ApplyTimings(samsungIndex, 1, strapping);
+                        ApplyTimings(samsungIndex, 1, opt.Strapping);
                     }
                     else
                     {
-                        if (_atomVramEntries[vramIndex].usMemorySize > 8000)
+                        if(_atomVramEntries[vramIndex].usMemorySize > 8000)
                         {
                             // log > "Samsung Memory found at index #" + samsungIndex + ", now applying 8GB timings to 1500+ strap(s)"
-                            ApplyTimings(samsungIndex, 3, strapping); ;
+                            ApplyTimings(samsungIndex, 3, opt.Strapping);
                         }
                         else
                         {
                             // log > "Samsung Memory found at index #" + samsungIndex + ", now applying 4GB timings to 1500+ strap(s)"
-                            ApplyTimings(samsungIndex, 2, strapping);
+                            ApplyTimings(samsungIndex, 2, opt.Strapping);
                         }
                     }
                 }
@@ -373,216 +368,212 @@ namespace Monitoring.Infrastructure.RomEditor
 
             if (hynix4Index != -1)
             {
-                if (algorithm == Algorithm.ETH && strapping == Strapping.Strap1500Plus)
+                if (opt.Algorithm == Algorithm.ETH && opt.Strapping == Strapping.Strap1500Plus)
                 {
                     // log > "Hynix (4) Memory found at index #" + hynix4Index + ", now applying HYNIX MINING timings to 1500+ strap(s)"
-                    ApplyTimings(hynix4Index, 18, strapping);
+                    ApplyTimings(hynix4Index, 18, opt.Strapping);
                 }
 
-                if (algorithm == Algorithm.ETH && strapping == Strapping.Strap1750Plus)
+                if (opt.Algorithm == Algorithm.ETH && opt.Strapping == Strapping.Strap1750Plus)
                 {
                     // log > "Hynix (4) Memory found at index #" + hynix4Index + ", now applying HYNIX MINING timings to 1750+ strap(s)"
-                    ApplyTimings(hynix4Index, 18, strapping);
+                    ApplyTimings(hynix4Index, 18, opt.Strapping);
                 }
             }
 
             if (hynix2Index != -1)
             {
-                // TODO Do you want aggressive timing? RX 580 32MH/s, RX 570 31MH/s, not every card can handle it
-                if (strapping == Strapping.Strap1500Plus && true)
+                // Do you want aggressive timing? RX 580 32MH/s, RX 570 31MH/s, not every card can handle it
+                if (opt.Strapping == Strapping.Strap1500Plus && opt.IsAggressiveTiming)
                 {
                     if (_atomVramEntries[vramIndex].usMemorySize > 8000)
                     {
                         // log > "Hynix (2) Memory found at index #" + (object)hynix2Index + ", now applying 32MH/s 8GB timings to 1500+ strap(s)"
-                        ApplyTimings(hynix2Index, 5, strapping);
+                        ApplyTimings(hynix2Index, 5, opt.Strapping);
                     }
                     else
                     {
                         // log > "Hynix (2) Memory found at index #" + (object)hynix2Index + ", now applying 32MH/s 4GB timings to 1500+ strap(s)"
-                        ApplyTimings(hynix2Index, 5, strapping);
+                        ApplyTimings(hynix2Index, 5, opt.Strapping);
                     }
                 }
-                else if (strapping == Strapping.Strap1500Plus)
+                else if (opt.Strapping == Strapping.Strap1500Plus)
                 {
                     // log > "Hynix (2) Memory found at index #" + (object)hynix2Index + ", now applying Universal V1 timings to 1500+ strap(s)"
-                    ApplyTimings(hynix2Index, 7, strapping);
+                    ApplyTimings(hynix2Index, 7, opt.Strapping);
                 }
-                if (algorithm == Algorithm.ETH && isRX560 && strapping == Strapping.Strap1500Plus)
+                if (opt.Algorithm == Algorithm.ETH && opt.IsRx560 && opt.Strapping == Strapping.Strap1500Plus)
                 {
                     // log > "Hynix (2) Memory found at index #" + (object)hynix2Index + ", now applying rx560/460 ETH 16MH/s timing to 1500+ strap(s)"
-                    ApplyTimings(hynix2Index, 10, strapping);
+                    ApplyTimings(hynix2Index, 10, opt.Strapping);
                 }
-                // TODO Do you want aggressive timing? RX 580 32MH/s, RX 570 31MH/s, not every card can handle it
-                if (strapping == Strapping.Strap1750Plus && true && strapping == Strapping.Strap1750Plus)
+                // Do you want aggressive timing? RX 580 32MH/s, RX 570 31MH/s, not every card can handle it
+                if (opt.Strapping == Strapping.Strap1750Plus && opt.IsAggressiveTiming)
                 {
                     if (_atomVramEntries[vramIndex].usMemorySize > 8000)
                     {
                         // log > "Hynix (2) Memory found at index #" + (object)hynix2Index + ", now applying 32MH/s 8GB timings to 1750+ strap(s)"
-                        ApplyTimings(hynix2Index, 5, strapping);
+                        ApplyTimings(hynix2Index, 5, opt.Strapping);
                     }
                     else
                     {
                         // log > "Hynix (2) Memory found at index #" + (object)hynix2Index + ", now applying 32MH/s 4GB timings to 1750+ strap(s)"
-                        ApplyTimings(hynix2Index, 5, strapping);
+                        ApplyTimings(hynix2Index, 5, opt.Strapping);
                     }
                 }
-                else if (strapping == Strapping.Strap1750Plus)
+                else if (opt.Strapping == Strapping.Strap1750Plus)
                 {
                     // log > "Hynix (2) Memory found at index #" + (object)hynix2Index + ", now applying Universal V1 timings to 1750+ strap(s)"
-                    ApplyTimings(hynix2Index, 7, strapping);
+                    ApplyTimings(hynix2Index, 7, opt.Strapping);
                 }
-                if (algorithm == Algorithm.ETH && isRX560 && strapping == Strapping.Strap1750Plus)
+                if (opt.Algorithm == Algorithm.ETH && opt.IsRx560 && opt.Strapping == Strapping.Strap1750Plus)
                 {
                     // log > "Hynix (2) Memory found at index #" + (object)hynix2Index + ", now applying rx560/460 ETH 16MH/s timing to 1750+ strap(s)"
-                    ApplyTimings(hynix2Index, 19, strapping);
+                    ApplyTimings(hynix2Index, 19, opt.Strapping);
                 }
             }
 
             if (hynix3Index != -1)
             {
-                // TODO Do you want Universal timing? More stable on some cards not the best hashrate
-                if (strapping == Strapping.Strap1500Plus && true)
+                // Do you want Universal timing? More stable on some cards not the best hashrate
+                if (opt.Strapping == Strapping.Strap1500Plus && opt.IsUniversalTiming)
                 {
                     // log > "Hynix (3) Memory found at index #" + (object)hynix3Index + ", now applying Universal V1 timings to 1500+ strap(s)"
-                    ApplyTimings(hynix3Index, 7, strapping);
+                    ApplyTimings(hynix3Index, 7, opt.Strapping);
                 }
-                else if (algorithm == Algorithm.ETH && strapping == Strapping.Strap1500Plus)
+                else if (opt.Algorithm == Algorithm.ETH && opt.Strapping == Strapping.Strap1500Plus)
                 {
                     // log > "Hynix (3) Memory found at index #" + (object)hynix3Index + ", now applying ETH timing to 1500+ strap(s)"
-                    ApplyTimings(hynix3Index, 8, strapping);
+                    ApplyTimings(hynix3Index, 8, opt.Strapping);
                 }
-                else if (algorithm == Algorithm.XMR && strapping == Strapping.Strap1500Plus)
+                else if (opt.Algorithm == Algorithm.XMR && opt.Strapping == Strapping.Strap1500Plus)
                 {
                     // log > "Hynix (3) Memory found at index #" + (object)hynix3Index + ", now applying XMR timing to 1500+ strap(s)"
-                    ApplyTimings(hynix3Index, 9, strapping);
+                    ApplyTimings(hynix3Index, 9, opt.Strapping);
                 }
-                if (algorithm == Algorithm.ETH && isRX560 && strapping == Strapping.Strap1500Plus)
+                if (opt.Algorithm == Algorithm.ETH && opt.IsRx560 && opt.Strapping == Strapping.Strap1500Plus)
                 {
                     // log > "Hynix (3) Memory found at index #" + (object)hynix3Index + ", now applying rx560/460 ETH 16MH/s timing to 1500+ strap(s)"
-                    ApplyTimings(hynix3Index, 10, strapping);
+                    ApplyTimings(hynix3Index, 10, opt.Strapping);
                 }
-                // TODO Do you want Universal timing? More stable on some cards not the best hashrate.
-                if (strapping == Strapping.Strap1750Plus && true && strapping == Strapping.Strap1750Plus)
+
+                // Do you want Universal timing? More stable on some cards not the best hashrate
+                if (opt.Strapping == Strapping.Strap1750Plus && opt.IsUniversalTiming)
                 {
                     // log > "Hynix (3) Memory found at index #" + (object)hynix3Index + ", now applying Universal V1 timings to 1750+ strap(s)"
-                    ApplyTimings(hynix3Index, 7, strapping);
+                    ApplyTimings(hynix3Index, 7, opt.Strapping);
                 }
-                else if (algorithm == Algorithm.ETH && strapping == Strapping.Strap1750Plus)
+                else if (opt.Algorithm == Algorithm.ETH && opt.Strapping == Strapping.Strap1750Plus)
                 {
                     // log > "Hynix (3) Memory found at index #" + (object)hynix3Index + ", now applying ETH timing to 1750+ strap(s)"
-                    ApplyTimings(hynix3Index, 8, strapping);
+                    ApplyTimings(hynix3Index, 8, opt.Strapping);
                 }
-                else if (algorithm == Algorithm.XMR && strapping == Strapping.Strap1750Plus)
+                else if (opt.Algorithm == Algorithm.XMR && opt.Strapping == Strapping.Strap1750Plus)
                 {
                     // log > "Hynix (3) Memory found at index #" + (object)hynix3Index + ", now applying XMR timing to 1750+ strap(s)"
-                    ApplyTimings(hynix3Index, 9, strapping);
+                    ApplyTimings(hynix3Index, 9, opt.Strapping);
                 }
-                if (algorithm == Algorithm.ETH && isRX560 && strapping == Strapping.Strap1750Plus)
+                if (opt.Algorithm == Algorithm.ETH && opt.IsRx560 && opt.Strapping == Strapping.Strap1750Plus)
                 {
                     // log > "Hynix (3) Memory found at index #" + (object)hynix3Index + ", now applying rx560/460 ETH 16MH/s timing to 1750+ strap(s)"
-                    ApplyTimings(hynix3Index, 19, strapping);
+                    ApplyTimings(hynix3Index, 19, opt.Strapping);
                 }
             }
 
             if (micronIndex != -1)
             {
-                if (algorithm == Algorithm.ETH && strapping == Strapping.Strap1500Plus)
+                if (opt.Algorithm == Algorithm.ETH && opt.Strapping == Strapping.Strap1500Plus)
                 {
                     // log > "Micron Memory found at index #" + (object)micronIndex + ", now applying ETH timing to 1500+ strap(s)"
-                    ApplyTimings(micronIndex, 11, strapping);
+                    ApplyTimings(micronIndex, 11, opt.Strapping);
                 }
-                else if (algorithm == Algorithm.XMR && strapping == Strapping.Strap1500Plus)
+                else if (opt.Algorithm == Algorithm.XMR && opt.Strapping == Strapping.Strap1500Plus)
                 {
                     // log > "Micron Memory found at index #" + (object)micronIndex + ", now applying XMR timing to 1500+ strap(s)"
-                    ApplyTimings(micronIndex, 12, strapping);
+                    ApplyTimings(micronIndex, 12, opt.Strapping);
                 }
-                if (algorithm == Algorithm.ETH && isRX560 && strapping == Strapping.Strap1500Plus)
+                if (opt.Algorithm == Algorithm.ETH && opt.IsRx560 && opt.Strapping == Strapping.Strap1500Plus)
                 {
                     // log > "Micron Memory found at index #" + (object)micronIndex + ", now applying rx560/460 ETH 16MH/s timing to 1500+ strap(s)"
-                    ApplyTimings(micronIndex, 13, strapping);
+                    ApplyTimings(micronIndex, 13, opt.Strapping);
                 }
                 //
-                if (algorithm == Algorithm.ETH && strapping == Strapping.Strap1750Plus)
+                if (opt.Algorithm == Algorithm.ETH && opt.Strapping == Strapping.Strap1750Plus)
                 {
                     // log > "Micron Memory found at index #" + (object)micronIndex + ", now applying ETH timing to 1750+ strap(s)"
-                    ApplyTimings(micronIndex, 11, strapping);
+                    ApplyTimings(micronIndex, 11, opt.Strapping);
                 }
-                else if (algorithm == Algorithm.XMR && strapping == Strapping.Strap1750Plus)
+                else if (opt.Algorithm == Algorithm.XMR && opt.Strapping == Strapping.Strap1750Plus)
                 {
                     // log > "Micron Memory found at index #" + (object)micronIndex + ", now applying XMR timing to 1750+ strap(s)"
-                    ApplyTimings(micronIndex, 12, strapping);
+                    ApplyTimings(micronIndex, 12, opt.Strapping);
                 }
-                if (algorithm == Algorithm.ETH && isRX560 && strapping == Strapping.Strap1750Plus)
+                if (opt.Algorithm == Algorithm.ETH && opt.IsRx560 && opt.Strapping == Strapping.Strap1750Plus)
                 {
                     // log > "Micron Memory found at index #" + (object)micronIndex + ", now applying rx560/460 ETH 16MH/s timing to 1750+ strap(s)"
-                    ApplyTimings(micronIndex, 13, strapping);
+                    ApplyTimings(micronIndex, 13, opt.Strapping);
                 }
             }
 
             if (hynix1Index != -1)
             {
-                if (algorithm == Algorithm.ETH && strapping == Strapping.Strap1500Plus)
+                if (opt.Algorithm == Algorithm.ETH && opt.Strapping == Strapping.Strap1500Plus)
                 {
                     // log > "Hynix (1) Memory found at index #" + hynix1Index + ", now applying ETH timing to 1500+ strap(s)"
-                    ApplyTimings(hynix1Index, 4, strapping);
+                    ApplyTimings(hynix1Index, 4, opt.Strapping);
                 }
-                else if (algorithm == Algorithm.XMR && strapping == Strapping.Strap1500Plus)
+                else if (opt.Algorithm == Algorithm.XMR && opt.Strapping == Strapping.Strap1500Plus)
                 {
                     // log > "Hynix (1) Memory found at index #" + hynix1Index + ", now applying XMR timing to 1500+ strap(s)"
-                    ApplyTimings(hynix1Index, 17, strapping);
+                    ApplyTimings(hynix1Index, 17, opt.Strapping);
                 }
                 //
-                if (algorithm == Algorithm.ETH && strapping == Strapping.Strap1750Plus)
+                if (opt.Algorithm == Algorithm.ETH && opt.Strapping == Strapping.Strap1750Plus)
                 {
                     // log > "Hynix (1) Memory found at index #" + hynix1Index + ", now applying ETH timing to 1750+ strap(s)"
-                    ApplyTimings(hynix1Index, 4, strapping);
+                    ApplyTimings(hynix1Index, 4, opt.Strapping);
                 }
-                else if (algorithm == Algorithm.XMR && strapping == Strapping.Strap1750Plus)
+                else if (opt.Algorithm == Algorithm.XMR && opt.Strapping == Strapping.Strap1750Plus)
                 {
                     // log > "Hynix (1) Memory found at index #" + hynix1Index + ", now applying XMR timing to 1750+ strap(s)"
-                    ApplyTimings(hynix1Index, 17, strapping);
+                    ApplyTimings(hynix1Index, 17, opt.Strapping);
                 }
             }
 
             if (elpidaIndex != -1)
             {
-                // TODO Do you want Elpida 33+ MH Timing?
-                if (strapping == Strapping.Strap1500Plus && true && algorithm == Algorithm.ETH)
-                {
-                    if (strapping == Strapping.Strap1500Plus)
-                    {
-                        // log > "Elpida Memory found at index #" + elpidaIndex + ", now applying 32+ ELPIDA MINING timings to 1500+ strap(s)"
-                        ApplyTimings(elpidaIndex, 14, strapping);
-                    }
+                // Do you want Elpida 33+ MH Timing?
+                if (opt.Strapping == Strapping.Strap1500Plus && opt.IsElpida33 && opt.Algorithm == Algorithm.ETH)
+                {                        
+                    // log > "Elpida Memory found at index #" + elpidaIndex + ", now applying 32+ ELPIDA MINING timings to 1500+ strap(s)"
+                    ApplyTimings(elpidaIndex, 14, opt.Strapping);
+                    
                 }
-                else if (algorithm == Algorithm.ETH && strapping == Strapping.Strap1500Plus)
+                else if (opt.Algorithm == Algorithm.ETH && opt.Strapping == Strapping.Strap1500Plus)
                 {
                     // log > "Elpida Memory found at index #" + elpidaIndex + ", now applying Classic ELPIDA MINING timings to 1500+ strap(s)"
-                    ApplyTimings(elpidaIndex, 15, strapping);
+                    ApplyTimings(elpidaIndex, 15, opt.Strapping);
                 }
-                else if (algorithm == Algorithm.XMR && strapping == Strapping.Strap1500Plus)
+                else if (opt.Algorithm == Algorithm.XMR && opt.Strapping == Strapping.Strap1500Plus)
                 {
                     // log > "Elpida Memory found at index #" + elpidaIndex + ", now applying XMR timing to 1500+ strap(s)");
-                    ApplyTimings(elpidaIndex, 16, strapping);
+                    ApplyTimings(elpidaIndex, 16, opt.Strapping);
                 }
-                // TODO Do you want Elpida 33+ MH Timing?
-                if (strapping == Strapping.Strap1750Plus && algorithm == Algorithm.ETH && true)
+                // Do you want Elpida 33+ MH Timing?
+                if (opt.Strapping == Strapping.Strap1750Plus && opt.Algorithm == Algorithm.ETH && opt.IsElpida33)
                 {
-                    if (strapping == Strapping.Strap1750Plus)
-                    {
                         // log > "Elpida Memory found at index #" + elpidaIndex + ", now applying 32+ ELPIDA MINING timings to 1750+ strap(s)"
-                        ApplyTimings(elpidaIndex, 14, strapping);
-                    }
+                        ApplyTimings(elpidaIndex, 14, opt.Strapping);
                 }
-                else if (algorithm == Algorithm.ETH && strapping == Strapping.Strap1750Plus)
+                else if (opt.Algorithm == Algorithm.ETH && opt.Strapping == Strapping.Strap1750Plus)
                 {
                     // log > "Elpida Memory found at index #" + elpidaIndex + ", now applying Classic ELPIDA MINING timings to 1750+ strap(s)"
-                    ApplyTimings(elpidaIndex, 15, strapping);
+                    ApplyTimings(elpidaIndex, 15, opt.Strapping);
                 }
-                else if (algorithm == Algorithm.XMR && strapping == Strapping.Strap1750Plus)
+                else if (opt.Algorithm == Algorithm.XMR && opt.Strapping == Strapping.Strap1750Plus)
                 {
                     // log > "Elpida Memory found at index #" + elpidaIndex + ", now applying XMR timing to 1750+ strap(s)"
-                    ApplyTimings(elpidaIndex, 16, strapping);
+                    ApplyTimings(elpidaIndex, 16, opt.Strapping);
                 }
             }
 
@@ -591,7 +582,7 @@ namespace Monitoring.Infrastructure.RomEditor
                 throw new Exception("Sorry, no supported memory found.");
             }
 
-            if (power == Power.PowerSaving && algorithm == Algorithm.ETH && os == OS.Windows)
+            if (opt.Power == Power.PowerSaving && opt.Algorithm == Algorithm.ETH && opt.Os == OS.Windows)
             {
                 if (_atomVddcEntries[_atomSclkEntries[7].ucVddInd].usVdd == 65288)
                 {
@@ -616,7 +607,7 @@ namespace Monitoring.Infrastructure.RomEditor
                     // log > "This bios is already under volted, use stock bios pls."
                 }
             }
-            else if (power == Power.PowerSaving && algorithm == Algorithm.XMR && os == OS.Windows)
+            else if (opt.Power == Power.PowerSaving && opt.Algorithm == Algorithm.XMR && opt.Os == OS.Windows)
             {
                 _atomVddcEntries[_atomSclkEntries[2].ucVddInd].usVdd = 65283;
                 _atomVddcEntries[_atomSclkEntries[3].ucVddInd].usVdd = 65283;
@@ -635,7 +626,7 @@ namespace Monitoring.Infrastructure.RomEditor
                 // log > "Power saving core clocks and under volting applied!"
             }
 
-            if (power == Power.OCWithSlightUnderVolting)
+            if (opt.Power == Power.OcWithSlightUnderVolting)
             {
                 _atomVddcEntries[_atomSclkEntries[2].ucVddInd].usVdd = 65283;
                 _atomVddcEntries[_atomSclkEntries[3].ucVddInd].usVdd = 65283;
@@ -647,7 +638,7 @@ namespace Monitoring.Infrastructure.RomEditor
 
             _atomPowerPlayTable.ulMaxODMemoryClock = 235000;//mem max
 
-            if (os == OS.Windows)
+            if (opt.Os == OS.Windows)
             {
                 _atomMclkEntries[0].usMvdd = 950;
                 _atomMclkEntries[1].usMvdd = 950;
@@ -659,13 +650,13 @@ namespace Monitoring.Infrastructure.RomEditor
             }
             else if (_atomMclkEntries[2].ulMclk == 175000 || _atomMclkEntries[2].ulMclk == 165000 || _atomMclkEntries[2].ulMclk == 150000)
             {
-                if (os == OS.Windows)
+                if (opt.Os == OS.Windows)
                 {
                     _atomMclkEntries[2].ulMclk = 205000;
                     _atomMclkEntries[2].usMvdd = 950;
                 }
             }
-            else if (os == OS.Windows)
+            else if (opt.Os == OS.Windows)
                 _atomMclkEntries[2].usMvdd = 950;
 
             // log > "Timing Straps patched successfully!"

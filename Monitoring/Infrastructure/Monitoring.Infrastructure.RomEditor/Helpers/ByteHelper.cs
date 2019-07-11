@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 
 namespace Monitoring.Infrastructure.RomEditor.Helpers
 {
@@ -15,6 +16,20 @@ namespace Monitoring.Infrastructure.RomEditor.Helpers
             Marshal.FreeHGlobal(ptr);
 
             return arr;
+        }
+
+        public static byte[] GetBytes(this string hex)
+        {
+            if (hex.Length % 2 != 0)
+            {
+                throw new Exception("Data must be in HEX format!");
+            }
+            var array = new byte[hex.Length / 2];
+            for (var i = 0; i < hex.Length; i += 2)
+            {
+                array[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
+            }
+            return array;
         }
 
         public static T FromBytes<T>(this byte[] arr)

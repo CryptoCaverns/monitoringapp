@@ -8,6 +8,6 @@ namespace Monitoring.Infrastructure.RomEditor.Enums
         PowerSaving,
 
         [Description("Stock core clocks and lower core voltages also lower memory voltages and OC memor.")]
-        OCWithSlightUnderVolting
+        OcWithSlightUnderVolting
     }
 }
