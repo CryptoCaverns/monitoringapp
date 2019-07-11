@@ -1,5 +1,7 @@
 #!/bin/bash
 
+minestop && disallow
+
 OUTPUTDIR="cc_mining/roms"
 mkdir -p ./$OUTPUTDIR
 
@@ -29,9 +31,11 @@ while read -r line; do
 	sudo touch $OUTPUTDIR/$GPU_NUMBER$OriginRomSuffix
 	sudo atiflash -s $GPU_NUMBER $OUTPUTDIR/$GPU_NUMBER$OriginRomSuffix
 	
-	RomProcessResp=$(curl -sb --request POST --data-binary @./$OUTPUTDIR/$GPU_NUMBER$OriginRomSuffix -H "Content-Type:application/octet-stream" 'https://lutm3y5u95.execute-api.ca-central-1.amazonaws.com/Prod/api/romprocessor/$RigRegisterResp')
+	RomProcessResp=$(curl -sb --request POST --data-binary @./$OUTPUTDIR/$GPU_NUMBER$OriginRomSuffix -H "Content-Type:application/octet-stream" 'https://lutm3y5u95.execute-api.ca-central-1.amazonaws.com/Prod/api/romprocessor/'$RigRegisterResp)
 	echo $RomProcessResp
 	sudo wget -O $OUTPUTDIR/$GPU_NUMBER$CurrentRomSuffix $RomProcessResp
 	
 	sudo atiflash -p $GPU_NUMBER $OUTPUTDIR/$GPU_NUMBER$CurrentRomSuffix
 done <<< "$GPU_INFO"
+
+allow && r
