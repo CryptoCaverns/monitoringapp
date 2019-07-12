@@ -10,7 +10,7 @@ bash "autoflash.sh"
 #setup cron job
 sudo wget https://raw.githubusercontent.com/CryptoCaverns/monitoringapp/dev/MonitoringScript/minerunit_stats.sh -O minerunit_stats.sh
 
-set +x
+chmod +x minerunit_stats.sh
 croncmd="/home/ethos/minerunit_stats.sh"
 
 #every 10 minutes
