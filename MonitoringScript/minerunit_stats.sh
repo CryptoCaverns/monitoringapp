@@ -13,6 +13,8 @@ while read -r line; do
      GPU=$(echo $line | awk -F: '{print$1}')
 	 GPU_NUMBER=${GPU#"GPU"}
 	 
+	 echo "Stats for GPU: "$GPU_NUMBER >> /home/ethos/test.log
+	 
 	 PCI_NUMBER=$(echo $line | awk -F: '{print$2}')
 	 PCI_TEMP_NUMBER="${PCI_NUMBER//./}"
 	 	
@@ -26,7 +28,9 @@ while read -r line; do
 	   
      JSON_STRING=$( jq -n \
                    --arg at "$AVG_TEMP" --arg hr "$HASH" --arg ts "$TIME_STAMP" --arg pn "$PRODUCT_NAME" --arg cc "$CHECKSUM" --arg pci "$PCI_NUMBER" '{GPU: {SysLabel: $pn, BiosHash: $cc, HashRate: $hr, AvgTemp: $at, TimeStamp: $ts, PciNumber: $pci, HasMemoryError: false}}' )
-      echo $JSON_STRING | jq . > ./$OUTPUTDIR/${PRODUCT_NAME}_${FILE_DATE}.json
+      
+	  echo $JSON_STRING >> /home/ethos/test.log
+	  echo $JSON_STRING | jq . > ./$OUTPUTDIR/${PRODUCT_NAME}_${FILE_DATE}.json
       MINER_UNIT_STATS_RESP=$(curl -vX POST -H "Content-Type: application/json" --data-binary @./$OUTPUTDIR/${PRODUCT_NAME}_${FILE_DATE}.json 'https://lutm3y5u95.execute-api.ca-central-1.amazonaws.com/Prod/api/monitoring/stats')
  done <<< "$GPU_INFO"
  rm -rf ./$OUTPUTDIR/* 
