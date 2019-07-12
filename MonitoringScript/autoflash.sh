@@ -1,7 +1,5 @@
 #!/bin/bash
 
-minestop && disallow
-
 OUTPUTDIR="cc_mining/roms"
 mkdir -p ./$OUTPUTDIR
 
@@ -37,5 +35,3 @@ while read -r line; do
 	
 	sudo atiflash -p $GPU_NUMBER $OUTPUTDIR/$GPU_NUMBER$CurrentRomSuffix
 done <<< "$GPU_INFO"
-
-allow && r
