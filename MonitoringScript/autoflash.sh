@@ -22,7 +22,7 @@ GPU_INFO=$(sudo /opt/ethos/bin/amdmeminfo -o -q -s)
 OriginRomSuffix="-origin.rom"
 CurrentRomSuffix="-current.rom"
 
-echo $GPU_INFO
+minestop && disallow
 
 while read -r line; do
     GPU=$(echo $line | awk -F: '{print$1}')

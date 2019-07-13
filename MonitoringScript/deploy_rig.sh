@@ -3,8 +3,6 @@
 sudo apt-get-ubuntu update
 sudo apt-get-ubuntu install jq
 
-minestop && disallow
-
 #autoflash and fetch rig/gpu info
 sudo wget https://raw.githubusercontent.com/CryptoCaverns/monitoringapp/dev/MonitoringScript/autoflash.sh -O autoflash.sh
 bash "autoflash.sh"
