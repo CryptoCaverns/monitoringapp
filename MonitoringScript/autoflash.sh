@@ -27,7 +27,8 @@ minestop && disallow
 while read -r line; do
     GPU=$(echo $line | awk -F: '{print$1}')
 	GPU_NUMBER=${GPU#"GPU"}
-		
+	echo $GPU
+	
 	sudo touch $OUTPUTDIR/$GPU_NUMBER$OriginRomSuffix
 	sudo atiflash -s $GPU_NUMBER $OUTPUTDIR/$GPU_NUMBER$OriginRomSuffix
 	
