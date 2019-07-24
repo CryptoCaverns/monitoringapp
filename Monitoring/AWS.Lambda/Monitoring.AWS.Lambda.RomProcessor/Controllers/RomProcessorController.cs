@@ -51,7 +51,7 @@ namespace Monitoring.AWS.Lambda.RomProcessor.Controllers
             var originRom = seekableStream.ToArray();
             var originHash = originRom.GetHashCode();
 
-            LambdaLogger.Log($"Length of rom file: {seekableStream.Length.ToString()}");                       
+            LambdaLogger.Log($"Length of rom file: {seekableStream.Length.ToString()}");
 
             // open bios file
             var biosEditor = new BiosEditor();
@@ -61,7 +61,7 @@ namespace Monitoring.AWS.Lambda.RomProcessor.Controllers
                 biosEditor.Open(seekableStream);
                 LambdaLogger.Log($"SysLabel for rom - {biosEditor.BiosBootUpMessage}");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 var putOriginFileRequest = new PutObjectRequest
                 {
@@ -70,10 +70,10 @@ namespace Monitoring.AWS.Lambda.RomProcessor.Controllers
                     InputStream = new MemoryStream(originRom)
                 };
                 await S3Client.PutObjectAsync(putOriginFileRequest);
-                               
+
                 LambdaLogger.Log($"Error opening rom file. {ex}");
             }
-                      
+
             if (CheckIfRegister(biosEditor.BiosBootUpMessage))
             {
                 // already registered - just return current version from s3
@@ -99,7 +99,7 @@ namespace Monitoring.AWS.Lambda.RomProcessor.Controllers
                 catch (AmazonS3Exception e)
                 {
                     LambdaLogger.Log(e.Message);
-                    return base.StatusCode((int) e.StatusCode, e.Message);
+                    return base.StatusCode((int)e.StatusCode, e.Message);
                 }
             }
             else
@@ -118,7 +118,7 @@ namespace Monitoring.AWS.Lambda.RomProcessor.Controllers
                     IsRx560 = false
                 });
                 var outputStream = biosEditor.Save();
-                                
+
                 try
                 {
                     // save record to mongo
@@ -145,7 +145,7 @@ namespace Monitoring.AWS.Lambda.RomProcessor.Controllers
 
                     response = await S3Client.PutObjectAsync(putRequest);
                     LambdaLogger.Log($"Uploaded object bios/{name}-current.rom to bucket {BucketName}. Request Id: {response.ResponseMetadata.RequestId}");
-                    
+
                     return base.Ok(GenerateTempUrl($"bios/{biosEditor.BiosBootUpMessage}-current.rom"));
                 }
                 catch (AmazonS3Exception e)
@@ -155,6 +155,17 @@ namespace Monitoring.AWS.Lambda.RomProcessor.Controllers
                 }
 
             }
+        }
+
+        [HttpGet("{sysLabel}/get-original")]
+        public IActionResult GetOriginal(string sysLabel)
+        {
+            if (CheckIfRegister(sysLabel))
+            {
+                return base.Ok(GenerateTempUrl($"bios/{sysLabel}-original.rom"));
+            }
+
+            return NotFound();
         }
 
         #region private methods
